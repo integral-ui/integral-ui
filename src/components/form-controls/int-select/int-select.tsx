@@ -2,10 +2,10 @@ import { Component, h, Host, Prop, Event, EventEmitter, Listen, Element } from '
 
 @Component({
     tag: 'int-select',
-    styleUrl: 'select.css',
+    styleUrl: 'int-select.css',
     shadow: true
 })
-export class SelectComponent {
+export class IntSelect {
     valueHash = {};
     @Prop() name: string;
     @Prop() placeholder: string = 'Please select';
