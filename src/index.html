@@ -11,12 +11,22 @@
 </head>
 <body>
   <!-- START int-checkbox -->
-  <int-checkbox checked>Hello</int-checkbox>
+  <int-checkbox id="checkbox-test" checked>Hello <a href="https://www.google.com">link</a></int-checkbox>
   <int-checkbox>Hello</int-checkbox>
-  <int-checkbox indeterminate>Hello</int-checkbox>
+  <int-checkbox checked indeterminate>Hello</int-checkbox>
   <int-checkbox disabled checked>Hello</int-checkbox>
   <int-checkbox disabled>Hello</int-checkbox>
   <int-checkbox disabled indeterminate>Hello</int-checkbox>
+  <script>
+    (function() {
+      let checkbox = document.getElementById('checkbox-test');
+      checkbox.addEventListener('changed', (e) => {
+        console.log('checked', e.target.checked);
+        console.log('indeterminate', e.target.indeterminate);
+        console.log('disabled', e.target.disabled);
+      });
+    })();
+  </script>
   <!-- END int-checkbox -->
 </body>
 </html>

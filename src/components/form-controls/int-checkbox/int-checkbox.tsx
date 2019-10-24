@@ -1,4 +1,13 @@
-import { Component, Host, h } from '@stencil/core';
+import { 
+  Component,
+  Host,
+  h,
+  Element,
+  Listen,
+  Prop,
+  EventEmitter,
+  Event
+} from '@stencil/core';
 
 @Component({
   tag: 'int-checkbox',
@@ -13,6 +22,8 @@ export class IntCheckbox {
   /**
    * Reference to host HTML element.
    */
+  @Element() el: HTMLElement;
+  checkbox: HTMLInputElement;
 
   /**
    * State() variables
@@ -21,19 +32,49 @@ export class IntCheckbox {
   /**
    * Public Property API
    */
+  @Prop() checked: boolean = false;
+  @Prop() indeterminate: boolean = false;
+  @Prop() disabled: boolean = false;
 
   /**
    * Events section
    */
+  @Event({
+    eventName: 'changed',
+    composed: true,
+    cancelable: true,
+    bubbles: true,
+  }) changed: EventEmitter;
 
   /**
    * Component lifecycle events
    */
+  // componentWillLoad() {}
+  componentDidLoad() {
+    this.checkbox.checked = this.checked;
+    this.checkbox.disabled = this.disabled;
+    this.checkbox.indeterminate = this.indeterminate;
+  }
+  // componentWillUpdate() {}
+  // componentDidUpdate() {}
+  // componentDidUnload() {}
 
   /**
    * Listeners
    */
+  @Listen('click')
+  onClick(_: UIEvent) {
+    if (this.checked != this.checkbox.checked
+      || this.disabled != this.checkbox.disabled
+      || this.indeterminate != this.checkbox.indeterminate
+    ) {
+      this.changed.emit(this.checkbox);
+    }
 
+    this.checked = this.checkbox.checked;
+    this.disabled = this.checkbox.disabled;
+    this.indeterminate = this.checkbox.indeterminate;
+  }
    
   /**
    * Public methods API
@@ -49,7 +90,10 @@ export class IntCheckbox {
   render() {
     return (
       <Host>
-        <slot></slot>
+        <label>
+          <input ref={(el) => { this.checkbox = el }} type="checkbox"></input>
+          <slot></slot>
+        </label>
       </Host>
     );
   }
