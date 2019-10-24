@@ -1,4 +1,4 @@
-import { Component, Host, h, EventEmitter, Prop, Event, Element } from '@stencil/core';
+import { Component, Host, h, EventEmitter, Prop, Event, Element, State } from '@stencil/core';
 
 @Component({
   tag: 'int-select-item',
@@ -6,19 +6,13 @@ import { Component, Host, h, EventEmitter, Prop, Event, Element } from '@stencil
   shadow: true
 })
 export class IntSelectItem {
-  _checked = false;
-  get checked() {
-      return this._checked;
-  }
-  set checked(value) {
-      this._checked = value;
-  }
-  uiqueID = `int-select-item_${Math.floor(Math.random() * 100000)}`;
+  @State() checked: boolean;
   @Prop() value: any;
   @Event() selected: EventEmitter;
   @Element() el: Element;
   clickHandler(e) {
       e.preventDefault();
+      e.stopPropagation();
       this.checked = !this.checked;
       this.setValue(this.checked);
   }
@@ -30,7 +24,7 @@ export class IntSelectItem {
   render() {
       return (
           <Host onClick={(event) => this.clickHandler(event)}>
-              <input type="checkbox" id={this.uiqueID} /><label htmlFor={this.uiqueID} ><slot/></label>
+              <slot/>
           </Host>
       )
   }
