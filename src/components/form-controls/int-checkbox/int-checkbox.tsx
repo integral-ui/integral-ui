@@ -64,16 +64,15 @@ export class IntCheckbox {
    */
   @Listen('click')
   onClick(_: UIEvent) {
-    if (this.checked != this.checkbox.checked
-      || this.disabled != this.checkbox.disabled
-      || this.indeterminate != this.checkbox.indeterminate
-    ) {
-      this.changed.emit(this.checkbox);
-    }
+    let changed = this.checked != this.checkbox.checked || this.disabled != this.checkbox.disabled || this.indeterminate != this.checkbox.indeterminate;
 
     this.checked = this.checkbox.checked;
     this.disabled = this.checkbox.disabled;
     this.indeterminate = this.checkbox.indeterminate;
+
+    if (changed) {
+      this.changed.emit();
+    }
   }
    
   /**
