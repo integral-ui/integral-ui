@@ -6,7 +6,8 @@ import {
   Listen,
   Prop,
   EventEmitter,
-  Event
+  Event,
+  Watch
 } from '@stencil/core';
 
 @Component({
@@ -32,9 +33,9 @@ export class IntCheckbox {
   /**
    * Public Property API
    */
-  @Prop() checked: boolean = false;
-  @Prop() indeterminate: boolean = false;
-  @Prop() disabled: boolean = false;
+  @Prop({ mutable: true, reflect: true }) checked: boolean = false;
+  @Prop({ mutable: true, reflect: true }) indeterminate: boolean = false;
+  @Prop({ mutable: true, reflect: true }) disabled: boolean = false;
 
   /**
    * Events section
@@ -51,9 +52,15 @@ export class IntCheckbox {
    */
   // componentWillLoad() {}
   componentDidLoad() {
-    this.checkbox.checked = this.checked;
-    this.checkbox.disabled = this.disabled;
     this.checkbox.indeterminate = this.indeterminate;
+    if (this.indeterminate) {
+      this.checkbox.checked = false;
+      this.checked = false;
+
+    } else {
+      this.checkbox.checked = this.checked;      
+    }
+    this.checkbox.disabled = this.disabled;
   }
   // componentWillUpdate() {}
   // componentDidUpdate() {}
@@ -62,17 +69,35 @@ export class IntCheckbox {
   /**
    * Listeners
    */
-  @Listen('click')
-  onClick(_: UIEvent) {
-    let changed = this.checked != this.checkbox.checked || this.disabled != this.checkbox.disabled || this.indeterminate != this.checkbox.indeterminate;
-
-    this.checked = this.checkbox.checked;
-    this.disabled = this.checkbox.disabled;
-    this.indeterminate = this.checkbox.indeterminate;
-
-    if (changed) {
+  @Watch('checked')
+  watchChecked(newVal:  boolean, _: boolean) {
+    this.checkbox.checked = newVal;
+    if (!this.indeterminate) {
       this.changed.emit();
     }
+  }
+
+  @Watch('indeterminate')
+  watchIndeterminate(newVal:  boolean, _: boolean) {
+    this.checkbox.indeterminate = newVal;
+    this.checkbox.checked = false;
+    this.checked = false;
+    if (!(this.checked  && !this.indeterminate)) {
+      this.changed.emit();
+    }
+  }
+
+  @Watch('disabled')
+  watchDisabled(newVal: boolean) {
+    this.checkbox.disabled = newVal;
+    this.changed.emit();
+  }
+
+  @Listen('click')
+  onClick() {
+    this.checked = this.indeterminate ? false : this.checkbox.checked;
+    this.indeterminate = this.checkbox.indeterminate;
+    this.disabled = this.checkbox.disabled;
   }
    
   /**
