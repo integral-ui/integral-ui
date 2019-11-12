@@ -94,7 +94,6 @@ export class IntCheckbox {
   @Watch('disabled')
   watchDisabled(newVal: boolean) {
     this.checkbox.disabled = newVal;
-    this.changed.emit();
   }
 
   @Listen('click')
@@ -125,5 +124,4 @@ export class IntCheckbox {
       </Host>
     );
   }
-
 }
