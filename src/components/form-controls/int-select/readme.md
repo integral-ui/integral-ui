@@ -11,14 +11,14 @@
 | ------------- | ------------- | ----------- | -------- | ----------------- |
 | `name`        | `name`        |             | `string` | `undefined`       |
 | `placeholder` | `placeholder` |             | `string` | `'Please select'` |
-| `value`       | `value`       |             | `any`    | `undefined`       |
+| `value`       | --            |             | `any[]`  | `[]`              |
 
 
 ## Events
 
-| Event       | Description | Type               |
-| ----------- | ----------- | ------------------ |
-| `didChange` |             | `CustomEvent<any>` |
+| Event     | Description | Type               |
+| --------- | ----------- | ------------------ |
+| `changed` |             | `CustomEvent<any>` |
 
 
 ----------------------------------------------

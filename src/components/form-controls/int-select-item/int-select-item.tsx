@@ -18,7 +18,7 @@ export class IntSelectItem {
     }
     setValue() {
         const nativeCheckboxEl: HTMLInputElement = this.el.querySelector('[type=checkbox]');
-        const integralCheckboxEl: HTMLInputElement = this.el.querySelector('int-checkbox');
+        const integralCheckboxEl: HTMLIntCheckboxElement = this.el.querySelector('int-checkbox');
         if (nativeCheckboxEl || integralCheckboxEl) {
             (nativeCheckboxEl || integralCheckboxEl).checked = this.checked;
         }
