@@ -33,11 +33,13 @@ export class IntCheckbox {
   /**
    * Public Property API
    */
+  // START
   @Prop({ mutable: true, reflect: true }) name: string;
   @Prop({ mutable: true, reflect: true }) value: boolean;
   @Prop({ mutable: true, reflect: true }) checked: boolean = false;
   @Prop({ mutable: true, reflect: true }) indeterminate: boolean = false;
   @Prop({ mutable: true, reflect: true }) disabled: boolean = false;
+  // END
 
   /**
    * Events section
