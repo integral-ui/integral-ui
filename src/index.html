@@ -14,48 +14,63 @@
 <body>
   This is a test of
   <int-select>
-    <int-select-item>A very long item longer than the trigger</int-select-item>
-    <int-select-item>Fiz</int-select-item>
+    <int-select-item value="1">A very long item longer than the trigger</int-select-item>
+    <int-select-item value="2">Fiz</int-select-item>
   </int-select>
   inline behaviour
-<p>
-    This is a test of
-  <int-select>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-    <int-select-item>Fiz</int-select-item>
-  </int-select>
-  long list behaviour
 
-</p>
+  <p>
+    Checkbox and values
+    <int-select>
+      <int-select-item value="a" selected><input type="checkbox">Item #1 </int-select-item>
+      <int-select-item value="b" selected><input type="checkbox">Item #2 </int-select-item>
+    </int-select>
+  </p>
+
+  <p>
+    Scrolling options
+    <int-select>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+      <int-select-item>Fiz</int-select-item>
+    </int-select>
+  </p>
+
+  <script>
+    (function () {
+      Array.from(document.querySelectorAll('int-select')).forEach(el => {
+        el.addEventListener('changed', (e) => console.log(`Changed`, e.target.value));
+      })
+    }())
+  </script>
 
 </body>
 
