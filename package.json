@@ -6,10 +6,10 @@
   "scripts": {
     "test": "lerna run test",
     "build": "lerna run build",
-    "update:stencil": "lerna run update"
+    "update:stencil": "lerna add stencil@latest --exact"
   },
   "name": "integralui",
   "devDependencies": {
-    "lerna": "^3.20.2"
+    "lerna": "3.20.2"
   }
 }
