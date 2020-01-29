@@ -1,6 +1,6 @@
 {
   "name": "@integralui/int-checkbox",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha.0",
   "description": "Stencil Component Starter",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
