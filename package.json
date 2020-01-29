@@ -21,7 +21,9 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "publish": {
-    "conventionalCommits": true
+  "command": {
+    "publish": {
+      "conventionalCommits": true
+    }  
   }
 }
