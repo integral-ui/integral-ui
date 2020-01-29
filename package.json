@@ -1,7 +1,8 @@
 {
   "private": true,
   "workspaces": [
-    "packages/**/*"
+    "packages/*/*",
+    "packages/*"
   ],
   "scripts": {
     "test": "lerna run test",
@@ -19,5 +20,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "publish": {
+    "conventionalCommits": true
   }
 }
