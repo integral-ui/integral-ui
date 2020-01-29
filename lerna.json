@@ -5,5 +5,10 @@
   ],
   "version": "0.0.1-alpha.0",
   "npmClient": "yarn",
-  "useWorkspaces": true
+  "useWorkspaces": true,
+  "command": {
+    "publish": {
+      "conventionalCommits": true
+    }  
+  }
 }
