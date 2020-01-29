@@ -1,11 +1,12 @@
 {
   "private": true,
   "workspaces": [
-    "packages/form-controls/*"
+    "packages/**/*"
   ],
   "scripts": {
     "test": "lerna run test",
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "update:stencil": "lerna run update"
   },
   "name": "integralui",
   "devDependencies": {
