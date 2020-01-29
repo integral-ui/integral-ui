@@ -1,14 +1,23 @@
 {
   "private": true,
   "workspaces": [
-    "packages/form-controls/*"
+    "packages/**/*"
   ],
   "scripts": {
     "test": "lerna run test",
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "commit": "git-cz",
+    "update:stencil": "lerna add stencil@latest --exact"
   },
   "name": "integralui",
   "devDependencies": {
-    "lerna": "^3.20.2"
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.1.0",
+    "lerna": "3.20.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

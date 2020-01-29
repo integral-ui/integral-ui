@@ -1,7 +1,7 @@
 import { Config } from '@stencil/core';
 
 export const config: Config = {
-  namespace: 'integralui',
+  namespace: 'int-select',
   outputTargets: [
     {
       type: 'dist',
