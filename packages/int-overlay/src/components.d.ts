@@ -10,53 +10,37 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
-  interface MyComponent {
-    /**
-    * The first name
-    */
-    'first': string;
-    /**
-    * The last name
-    */
-    'last': string;
-    /**
-    * The middle name
-    */
-    'middle': string;
+  interface IntOverlay {
+    'header': string;
+    'left': string;
+    'modal': boolean;
+    'top': string;
   }
 }
 
 declare global {
 
 
-  interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {}
-  var HTMLMyComponentElement: {
-    prototype: HTMLMyComponentElement;
-    new (): HTMLMyComponentElement;
+  interface HTMLIntOverlayElement extends Components.IntOverlay, HTMLStencilElement {}
+  var HTMLIntOverlayElement: {
+    prototype: HTMLIntOverlayElement;
+    new (): HTMLIntOverlayElement;
   };
   interface HTMLElementTagNameMap {
-    'my-component': HTMLMyComponentElement;
+    'int-overlay': HTMLIntOverlayElement;
   }
 }
 
 declare namespace LocalJSX {
-  interface MyComponent {
-    /**
-    * The first name
-    */
-    'first'?: string;
-    /**
-    * The last name
-    */
-    'last'?: string;
-    /**
-    * The middle name
-    */
-    'middle'?: string;
+  interface IntOverlay {
+    'header'?: string;
+    'left'?: string;
+    'modal'?: boolean;
+    'top'?: string;
   }
 
   interface IntrinsicElements {
-    'my-component': MyComponent;
+    'int-overlay': IntOverlay;
   }
 }
 
@@ -66,7 +50,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
   export namespace JSX {
     interface IntrinsicElements {
-      'my-component': LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
+      'int-overlay': LocalJSX.IntOverlay & JSXBase.HTMLAttributes<HTMLIntOverlayElement>;
     }
   }
 }
