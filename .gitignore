@@ -26,3 +26,4 @@ test/fixtures/**/.fbkpm
 /packages/lockfile/index.js
 .vscode/
 components.d.ts
+.DS_Store
