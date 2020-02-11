@@ -6,15 +6,73 @@
   <title>Stencil Component Starter</title>
 
   <script type="module" src="/build/int-overlay.esm.js"></script>
-  <script nomodule src="/build/int-overlay.js"></script>
-
+  <script nomodule src="/build/int-overlay.js"></script>  
+  <style>
+    * {
+      padding:0;
+      margin: 0;
+    }
+    html {
+      height: 100%;
+    }
+    body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    div[data-x][data-y] {
+      width: 450px;
+      height: 250px;
+    }
+  </style>
 </head>
 <body>
-
-  <int-overlay header="Heading" modal="true">
-    <div slot="body">body</div>
-    <div slot="footer">footer <span class="test"></span></div>
+  <div data-x="left" data-y="bottom" style="background: green;"></div>
+  <int-overlay class="tooltip" style="display: none;">
+    This is tooltip information
   </int-overlay>
+  <script>
+    [
+      {x: "right", y: "top"},
+      {x: "center", y: "top"},
+      {x: "left", y: "top"},
+      {x: "left", y: "center"},
+      {x: "left", y: "bottom"},
+      {x: "center", y: "bottom"},
+      {x: "right", y: "bottom"},
+      {x: "right", y: "center"},
+      {x: "left", y: "0"},
+      {x: "left", y: "190"},
+      {x: "right", y: "0"},
+      {x: "right", y: "190"},
+    ].forEach((target, i) => {
+      const p = target;
+      let overlay = document.createElement('int-overlay');
+      overlay.header = `[${i}] ${p.x} ${p.y}`;
+      overlay.x = `${p.x}`;
+      overlay.y = `${p.y}`;
+      overlay.anchor = "div";
+      document.body.appendChild(overlay);
+    });
+    const tooltip = document.querySelector('.tooltip');
+    const tooltipTarget = document.querySelector('div[data-x]');
+    let isShowing = false;
+    tooltipTarget.addEventListener('mouseenter', (e) => {
+      tooltip.style.display = "block";
+      isShowing = true
+    });
+    tooltipTarget.addEventListener('mouseleave', (e) => {
+      tooltip.style.display = "none";
+      isShowing = false
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (!isShowing) return;
+      tooltip.x = e.clientX + 12;
+      tooltip.y = e.clientY + 12;
+    });
+  </script>
 
 </body>
 </html>
