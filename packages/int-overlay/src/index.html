@@ -11,6 +11,7 @@
     * {
       padding:0;
       margin: 0;
+      font: 10px monospace;
     }
     html {
       height: 100%;
@@ -22,42 +23,42 @@
       align-items: center;
       justify-content: center;
     }
-    div[data-x][data-y] {
+    .target {
       width: 450px;
       height: 250px;
     }
   </style>
 </head>
 <body>
-  <div data-x="left" data-y="bottom" style="background: green;"></div>
+  <div class="target" style="background: green;"></div>
   <int-overlay class="tooltip" style="display: none;">
     This is tooltip information
   </int-overlay>
   <script>
     [
-      {x: "right", y: "top"},
-      {x: "center", y: "top"},
-      {x: "left", y: "top"},
+      {x: "right", y: "top", p: 'x'},
+      {x: "right", y: "top", p: 'y'},
+      {x: "right", y: "bottom", p: 'x'},
+      {x: "right", y: "bottom", p: 'y'},
+      {x: "left", y: "top", p: 'x'},
+      {x: "left", y: "top", p: 'y'},
+      {x: "left", y: "bottom", p: 'x'},
+      {x: "left", y: "bottom", p: 'y'},
       {x: "left", y: "center"},
-      {x: "left", y: "bottom"},
-      {x: "center", y: "bottom"},
-      {x: "right", y: "bottom"},
       {x: "right", y: "center"},
-      {x: "left", y: "0"},
-      {x: "left", y: "190"},
-      {x: "right", y: "0"},
-      {x: "right", y: "190"},
-    ].forEach((target, i) => {
-      const p = target;
+      {x: "center", y: "top"},
+      {x: "center", y: "bottom"}
+    ].forEach((loc, i) => {
       let overlay = document.createElement('int-overlay');
-      overlay.header = `[${i}] ${p.x} ${p.y}`;
-      overlay.x = `${p.x}`;
-      overlay.y = `${p.y}`;
-      overlay.anchor = "div";
+      overlay.header = `x: ${loc.x} y: ${loc.y} p: ${loc.p || 'y'}`;
+      overlay.anchor = ".target";
+      overlay.priority = `${loc.p}`;
+      overlay.x = `${loc.x}`;
+      overlay.y = `${loc.y}`;
       document.body.appendChild(overlay);
     });
     const tooltip = document.querySelector('.tooltip');
-    const tooltipTarget = document.querySelector('div[data-x]');
+    const tooltipTarget = document.querySelector('.target');
     let isShowing = false;
     tooltipTarget.addEventListener('mouseenter', (e) => {
       tooltip.style.display = "block";
