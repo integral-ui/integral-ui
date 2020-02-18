@@ -12,6 +12,7 @@
       padding:0;
       margin: 0;
       font: 10px monospace;
+      -webkit-user-select: none;
     }
     html {
       height: 100%;
@@ -24,55 +25,95 @@
       justify-content: center;
     }
     .target {
-      width: 450px;
+      width: 600px;
       height: 250px;
+      border: 2px solid red;
+    }
+    .absolute {
+      position: absolute;
+      top: 80vh;
+      left: 85vw;
+      width: 10vw;
+      height: 10vh;
+      border: 2px solid purple
     }
   </style>
 </head>
 <body>
   <div class="target" style="background: green;"></div>
-  <int-overlay class="tooltip" style="display: none;">
-    This is tooltip information
+  <div class="absolute" onmousedown="dragStart(event, this)" onmouseup="dragEnd(event)" style="background: lightgray;"></div>
+  <!-- <int-overlay class="tooltip" style="display: none;">This is tooltip information</int-overlay> -->
+  <int-overlay class="follow" anchor=".absolute" edge="bottom" arrow>
+    Start @ bottom center and this cant fit properly in the space allowed
   </int-overlay>
   <script>
-    [
-      {x: "right", y: "top", p: 'x'},
-      {x: "right", y: "top", p: 'y'},
-      {x: "right", y: "bottom", p: 'x'},
-      {x: "right", y: "bottom", p: 'y'},
-      {x: "left", y: "top", p: 'x'},
-      {x: "left", y: "top", p: 'y'},
-      {x: "left", y: "bottom", p: 'x'},
-      {x: "left", y: "bottom", p: 'y'},
-      {x: "left", y: "center"},
-      {x: "right", y: "center"},
-      {x: "center", y: "top"},
-      {x: "center", y: "bottom"}
-    ].forEach((loc, i) => {
-      let overlay = document.createElement('int-overlay');
-      overlay.header = `x: ${loc.x} y: ${loc.y} p: ${loc.p || 'y'}`;
-      overlay.anchor = ".target";
-      overlay.priority = `${loc.p}`;
-      overlay.x = `${loc.x}`;
-      overlay.y = `${loc.y}`;
-      document.body.appendChild(overlay);
-    });
     const tooltip = document.querySelector('.tooltip');
     const tooltipTarget = document.querySelector('.target');
-    let isShowing = false;
-    tooltipTarget.addEventListener('mouseenter', (e) => {
-      tooltip.style.display = "block";
-      isShowing = true
-    });
-    tooltipTarget.addEventListener('mouseleave', (e) => {
-      tooltip.style.display = "none";
-      isShowing = false
-    });
+    const draggable = document.querySelector('.absolute');
+    const overlayFollow = document.querySelector('.follow');
+    let showToolTip = false;
+    let enableDrag = false;
+    let dragOffset = {x:0, y:0};
+
+    function dragStart(e, el) {
+      const box = el.getBoundingClientRect();
+      dragOffset = {x:0, y:0};
+      enableDrag = true;
+      dragOffset.x = e.clientX - box.left;
+      dragOffset.y = e.clientY - box.top;
+    }
+    function dragEnd(e) {
+      enableDrag = false;      
+    }
     document.addEventListener('mousemove', (e) => {
-      if (!isShowing) return;
-      tooltip.x = e.clientX + 12;
-      tooltip.y = e.clientY + 12;
+      if (showToolTip) {
+        tooltip.x = e.clientX + 12;
+        tooltip.y = e.clientY + 12;
+      }
+      if (enableDrag) {
+        draggable.style.top = `${e.clientY - dragOffset.y}px`;
+        draggable.style.left = `${e.clientX - dragOffset.x}px`;
+        overlayFollow.updatePositioning();
+      }
     });
+
+    [
+      {edge: "top", x: "min"},
+      {edge: "top", x: "center"},
+      {edge: "top", x: "max"},
+      {edge: "bottom", x: "min"},
+      {edge: "bottom", x: "center"},
+      {edge: "bottom", x: "max"},
+      {edge: "left", y: "min"},
+      {edge: "left", y: "center"},
+      {edge: "left", y: "max"},
+      {edge: "right", y: "min"},
+      {edge: "right", y: "center"},
+      {edge: "right", y: "30", x: "20"},
+      {edge: "right", y: "max"}
+    ].forEach((conf, i) => {
+      let overlay = document.createElement('int-overlay');
+      overlay.anchor = ".target";
+      overlay.edge = conf.edge;
+      overlay.x = conf.x;
+      overlay.y = conf.y;
+      overlay.arrow = !!conf.arrow
+      let content = document.createElement('span');
+      content.slot = "body";
+      content.innerText = JSON.stringify(conf);
+      overlay.appendChild(content)
+      document.body.appendChild(overlay);
+    });
+    // const tooltip = document.querySelector('.tooltip');
+    // const tooltipTarget = document.querySelector('.target');
+    // tooltipTarget.addEventListener('mouseenter', (e) => {
+    //   tooltip.style.display = "block";
+    //   showToolTip = true
+    // });
+    // tooltipTarget.addEventListener('mouseleave', (e) => {
+    //   tooltip.style.display = "none";
+    //   showToolTip = false
+    // });
   </script>
 
 </body>

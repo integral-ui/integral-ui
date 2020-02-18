@@ -1,4 +1,8 @@
-import {Component, Host, h, Element, Prop, State, Listen, Watch} from '@stencil/core';
+import {Component, Host, h, Element, Prop, State, Listen, Watch, Method} from '@stencil/core';
+
+type Edge = "top" | "left" | "bottom" | "right" | null;
+type Position = "center" | "min" | "max" | number;
+type Coordinates = {x: Number, y: Number};
 
 @Component({
   tag: 'int-overlay',
@@ -9,17 +13,19 @@ export class Overlay {
   resizeTimer;
   hasFooter: boolean;
   anchorElement: Element;
+  resolverFailedEdgePasses = [];
   @Element() el: Element;
   @State() positionX = 0;
   @State() positionY = 0;
   @Prop() anchor: any = null;
   @Prop() modal: boolean;
   @Prop() header: string;
-  @Prop() x: string | number = "center";
-  @Prop() y: string | number = "center";
-  @Prop() priority: "x" | "y" = "y";
-  @Prop() edge: "top" | "left" | "bottom" | "right" = "bottom";
-  @Prop() offset: "50%" | "0%" | "100%" | number = "50%";
+  @Prop() arrow: boolean;
+  @Prop() edge: Edge = null;
+  @Prop() x: Position = "center";
+  @Prop() y: Position = "center";
+  @Prop() useResolver: boolean = true;
+  
 
   componentWillLoad() {
   }
@@ -61,100 +67,186 @@ export class Overlay {
     this.resizeTimer = window.setTimeout(() => this.refreshPosition(), 100);
   }
 
-  @Watch('priority')
+  @Watch('edge')
   @Watch('x')
   @Watch('y')
+  @Method()
   updatePositioning() {
     this.refreshPosition();
   }
+  /*
+  calculatePosition(desiredEdge: Edge, x: Position, y: Position, anchorRect: ClientRect, contentRect: ClientRect): Coordinates {
+    if (this.anchorElement) {
+      const targetBounds: ClientRect = this.anchorElement.getBoundingClientRect();
+
+      switch(desiredEdge) {
+        case "top":
+          this.positionY = targetBounds.top - contentBounds.height - numericY;
+           break;
+        case "bottom":
+          this.positionY = targetBounds.bottom + numericY;
+          break;
+        case "left":
+          this.positionX = targetBounds.left - contentBounds.width - numericX;
+          break;
+        case "right":
+          this.positionX = targetBounds.right + numericX;
+          break;
+      }
+      if (desiredEdge === "bottom" || desiredEdge === "top") {
+        if (desiredX === "min") {
+          this.positionX = targetBounds.left;
+        } else if (desiredX === "max") {
+          this.positionX = targetBounds.right - contentBounds.width;
+        } else if (desiredX === "center") {
+          this.positionX = (targetBounds.left + (targetBounds.width/2)) - (contentBounds.width/2);
+        }
+      }
+      if (desiredEdge === "left" || desiredEdge === "right") {
+        if (desiredY === "min") {
+          this.positionY = targetBounds.top;
+        } else if (desiredY === "max") {
+          this.positionY = targetBounds.bottom - contentBounds.height;
+        } else if (desiredY === "center") {
+          this.positionY = (targetBounds.top + (targetBounds.height/2)) - (contentBounds.height/2);
+        } else {
+          this.positionY = targetBounds.top + Number(desiredY);
+        }
+      }
+
+      // if current position cannot fit entire within the screen, move to another edge via resolverFailedEdgePasses
+      if (this.positionY <= 0 && desiredEdge === "top") {
+        desiredEdge = "bottom";
+      } else if (this.positionY + contentBounds.height >= viewport.height && desiredEdge === "bottom") {
+        desiredEdge = "top";
+      }
+      if (this.positionX < 0 && desiredEdge === "left") {
+        desiredEdge = "right";
+      } else if (this.positionX + contentBounds.width >= viewport.width && desiredEdge === "right") {
+        desiredEdge = "left";
+      }
+
+    } else {
+      
+      if (desiredX === "center") {
+        this.positionX = (viewport.width/2) - (contentBounds.width/2);
+      } else if (desiredX === "min") {
+        this.positionX = 0;
+      } else if (desiredX === "max") {
+        this.positionX = viewport.width - contentBounds.width;
+      } else {
+        this.positionX = numericX;
+      }
+      
+      if (desiredY === "center") {
+        this.positionY = (viewport.height/2) - (contentBounds.height/2);
+      } else if (desiredY === "min") {
+        this.positionY = 0;
+      } else if (desiredY === "max") {
+        this.positionY = viewport.height - contentBounds.height;
+      } else {
+        this.positionY = numericY;
+      }
+
+    }
+    return {
+      x: 0,
+      y: 0
+    }
+  }
+  */
 
   refreshPosition() {
     const viewport = {width: window.innerWidth, height: window.innerHeight};
     const content: Element = this.el.shadowRoot.querySelector('.content');
     const contentBounds: ClientRect = content.getBoundingClientRect();
-    const priority = this.priority;
-    let desiredX: string | number = this.x;
-    let desiredY: string | number = this.y;
+    const arrowOffset = 20;
+    let desiredEdge = this.edge;
+    let oppositeEdge;
+    let desiredX = this.x;
+    let numericX = ((Number.isNaN(Number(this.x))) ? 0 : Number(this.x));
+    let desiredY = this.y;
+    let numericY = ((Number.isNaN(Number(this.y))) ? 0 : Number(this.y));
+    
+    if (this.arrow) {
+      switch (desiredEdge) {
+        case("top"): numericY -= arrowOffset; break;
+        case("bottom"): numericY += arrowOffset; break;
+        case("left"): numericX -= arrowOffset; break;
+        case("right"): numericX += arrowOffset; break;
+      }
+    }
 
     if (this.anchorElement) {
       const targetBounds: ClientRect = this.anchorElement.getBoundingClientRect();
-      if (desiredY === "top") {
-        this.positionY = targetBounds.top - contentBounds.height;
-      } else if (desiredY === "bottom") {
-        this.positionY = targetBounds.bottom;
-      } else if (desiredY === "center") {
-        this.positionY = (targetBounds.top + (targetBounds.height/2)) - (contentBounds.height/2);
-      } else {
-        // number is relative to target 
-        this.positionY = targetBounds.top + (+desiredY);
-      }
 
-      if (desiredX === "left") {
-        if (desiredY === "center") {
-          this.positionX = targetBounds.left - contentBounds.width;
-        } else {
+      switch(desiredEdge) {
+        case "top":
+          this.positionY = targetBounds.top - contentBounds.height - numericY;
+           break;
+        case "bottom":
+          this.positionY = targetBounds.bottom + numericY;
+          break;
+        case "left":
+          this.positionX = targetBounds.left - contentBounds.width - numericX;
+          break;
+        case "right":
+          this.positionX = targetBounds.right + numericX;
+          break;
+      }
+      if (desiredEdge === "bottom" || desiredEdge === "top") {
+        if (desiredX === "min") {
           this.positionX = targetBounds.left;
-        }
-      } else if (desiredX === "right") {
-        if (desiredY === "center") {
-          this.positionX = targetBounds.right;
-        } else {
+        } else if (desiredX === "max") {
           this.positionX = targetBounds.right - contentBounds.width;
+        } else if (desiredX === "center") {
+          this.positionX = (targetBounds.left + (targetBounds.width/2)) - (contentBounds.width/2);
         }
-      } else if (desiredX === "center") {
-        this.positionX = (targetBounds.left + (targetBounds.width/2)) - (contentBounds.width/2);
-      } else {
-        // number is relative to target
-        this.positionX = targetBounds.left + (+desiredX);
+      }
+      if (desiredEdge === "left" || desiredEdge === "right") {
+        if (desiredY === "min") {
+          this.positionY = targetBounds.top;
+        } else if (desiredY === "max") {
+          this.positionY = targetBounds.bottom - contentBounds.height;
+        } else if (desiredY === "center") {
+          this.positionY = (targetBounds.top + (targetBounds.height/2)) - (contentBounds.height/2);
+        } else {
+          this.positionY = targetBounds.top + Number(desiredY);
+        }
       }
 
-      // if (priority === "y") {
-      //   // Align edges to top or bottom FIRST
-      //   // right or left is outside of target
-      //   if (this.positionY >= targetBounds.top && this.positionY < targetBounds.bottom) {
-      //     if (desiredX === "left") {
-      //       desiredY = -contentBounds.width;
-      //     } else if (desiredX === "right") {
-      //       desiredY = targetBounds.width;
-      //     }
-      //   }
-      // }
-      
-
-      // if (priority === "x") {
-      //   // Align edges to left or right FIRST
-      //   // top or bottom is outside of target
-      //   if (this.positionX >= targetBounds.left && this.positionX < targetBounds.right) {
-      //     if (desiredY === "top") {
-      //       desiredX = -contentBounds.width;
-      //     } else if (desiredY === "bottom") {
-      //       desiredX = targetBounds.width;
-      //     }
-      //   }
-      // }
-
-
+      // if current position cannot fit entire within the screen, move to another edge via resolverFailedEdgePasses
+      if (this.positionY <= 0 && desiredEdge === "top") {
+        desiredEdge = "bottom";
+      } else if (this.positionY + contentBounds.height >= viewport.height && desiredEdge === "bottom") {
+        desiredEdge = "top";
+      }
+      if (this.positionX < 0 && desiredEdge === "left") {
+        desiredEdge = "right";
+      } else if (this.positionX + contentBounds.width >= viewport.width && desiredEdge === "right") {
+        desiredEdge = "left";
+      }
 
     } else {
       
-      if (this.x === "center") {
+      if (desiredX === "center") {
         this.positionX = (viewport.width/2) - (contentBounds.width/2);
-      } else if (this.x === "left") {
+      } else if (desiredX === "min") {
         this.positionX = 0;
-      } else if (this.x === "right") {
+      } else if (desiredX === "max") {
         this.positionX = viewport.width - contentBounds.width;
       } else {
-        this.positionX = +this.x;
+        this.positionX = numericX;
       }
       
-      if (this.y === "center") {
+      if (desiredY === "center") {
         this.positionY = (viewport.height/2) - (contentBounds.height/2);
-      } else if (this.y === "top") {
+      } else if (desiredY === "min") {
         this.positionY = 0;
-      } else if (this.y === "bottom") {
+      } else if (desiredY === "max") {
         this.positionY = viewport.height - contentBounds.height;
       } else {
-        this.positionY = +this.y;
+        this.positionY = numericY;
       }
 
     }
