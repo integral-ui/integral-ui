@@ -8,7 +8,6 @@ export interface Location {
 	x: number,
 	y: number
 }
-
 @Component({
 	tag: 'int-overlay',
 	styleUrl: 'overlay.css',
@@ -21,6 +20,7 @@ export class Overlay {
 	resolverFailedEdgePasses = [];
 	arrowEdge: Edge;
 	@Element() el: Element;
+	
 	@State() positionX = 0;
 	@State() positionY = 0;
 	@State() arrowTranslation = '';
@@ -34,12 +34,6 @@ export class Overlay {
 	@Prop() y: Pos = "center";
 
 	constructor() {}
-
-	connectedCallback() {
-	}
-
-	componentWillLoad() {
-	}
 
 	componentDidLoad() {
 		const footerSlot = this.el.shadowRoot.querySelector<HTMLSlotElement>('slot[name="footer"]');
@@ -68,14 +62,6 @@ export class Overlay {
 
 	componentDidUnload() {
 		window.clearTimeout(this.resizeTimer);
-	}
-
-	componentWillUpdate() {
-		// this.setPosition();
-	}
-
-	componentDidUpdate() {
-		this.setPosition();
 	}
 
 	@Listen('resize', { target: 'window', passive: true })
@@ -187,44 +173,48 @@ export class Overlay {
 		const contentRect: ClientRect = content.getBoundingClientRect();
 		const targetBounds: ClientRect = (this.anchorElement) ? this.anchorElement.getBoundingClientRect() : undefined;
 		const arrowWidthHeight = (this.arrow) ? 10 : 0;
-		let newEdge;
+		let alternateEdge;
 
 		let loc: Location = this.calculatePosition(this.edge, this.x, this.y, arrowWidthHeight, contentRect, targetBounds);
 
 		if (loc.y <= 0 && loc.edge === "top") {
-			newEdge = "bottom";
+			alternateEdge = "bottom";
 		} else if (loc.y + contentRect.height >= viewport.height && loc.edge === "bottom") {
-			newEdge = "top";
+			alternateEdge = "top";
 		}
 		if (loc.x < 0 && loc.edge === "left") {
-			newEdge = "right";
+			alternateEdge = "right";
 		} else if (loc.x + contentRect.width >= viewport.width && loc.edge === "right") {
-			newEdge = "left";
+			alternateEdge = "left";
 		}
-		if (newEdge) {
-			loc = this.calculatePosition(newEdge, this.x, this.y, arrowWidthHeight, contentRect, targetBounds);
+		if (alternateEdge) {
+			loc = this.calculatePosition(alternateEdge, this.x, this.y, arrowWidthHeight, contentRect, targetBounds);
 		}
 
-		this.positionX = Math.round(loc.x);
-		this.positionY = Math.round(loc.y);
+		if (Math.round(loc.x) !== this.positionX) {
+			this.positionX = Math.round(loc.x);
+		}
+		if (Math.round(loc.y) !== this.positionY) {
+			this.positionY = Math.round(loc.y);
+		}
 
 		if (this.arrow) {
-			let start = 0, p0, p1, p2, p3, arrowOffset = 0;
+			let [start, p0, p1, p2, p3, arrowOffset] = [0,0,0,0,0,0];
 			this.arrowEdge = loc.edge;
+			let plane = (loc.edge === 'bottom' || loc.edge === 'top') ? 'X' : 'Y';
 			if (this.arrowEdge === "top" || this.arrowEdge === "bottom") {
-				[p0, p1, p2, p3] = [targetBounds.left, targetBounds.right, contentRect.left, contentRect.right].sort((a,b) => a - b)
-				start = (contentRect.left <= targetBounds.left) ? p1 - p0 : 0
-				arrowOffset = start + ( (p2 - p1) / 2 ) - ( arrowWidthHeight / 2 );
-				this.arrowTranslation = `translateX(${arrowOffset}px)`;
-
+				[p0, p1, p2, p3] = [targetBounds.left, targetBounds.right, this.positionX, this.positionX + contentRect.width].sort((a,b) => a - b)
+				start = (this.positionX <= targetBounds.left) ? p1 - p0 : 0
 			} else {
-				[p0, p1, p2, p3] = [targetBounds.top, targetBounds.bottom, contentRect.top, contentRect.bottom].sort((a,b) => a - b)
-				start = (contentRect.top <= targetBounds.top) ? p1 - p0 : 0
-				arrowOffset = start + ( (p2 - p1) / 2 ) - ( arrowWidthHeight / 2 );
-				this.arrowTranslation = `translateY(${arrowOffset}px)`;
+				[p0, p1, p2, p3] = [targetBounds.top, targetBounds.bottom, this.positionY, this.positionY + contentRect.height].sort((a,b) => a - b)
+				start = (this.positionY <= targetBounds.top) ? p1 - p0 : 0
 			}
-		}		
-
+			arrowOffset = start + ( (p2 - p1) / 2 );
+			let newTranslation = `translate${plane}(${arrowOffset}px)`;
+			if (this.arrowTranslation !== newTranslation) {
+				this.arrowTranslation = newTranslation;
+			}
+		}
 	}
 	render() {
 		return (

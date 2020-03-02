@@ -38,34 +38,48 @@
       top: calc(50% - 30px);
       left: calc(50% - 60px);
     }
-    .absolute {
+    .absoluteA {
       position: absolute;
       top: 80vh;
       left: 85vw;
       width: 10vw;
       height: 10vh;
-      border: 2px solid purple
+      border: 2px solid purple;
+      background-color: plum;
+    }
+    .absoluteB {
+      position: absolute;
+      top: 100px;
+      left: 300px;
+      width: 10vw;
+      height: 10vh;
+      border: 2px solid brown;
+      background-color: burlywood;
     }
   </style>
 </head>
 <body>
   <div class="target" style="background: green;"></div>
-  <div class="absolute" onmousedown="dragStart(event)" onmouseup="dragEnd(event)" style="background: lightgray;"></div>
   <int-overlay class="tooltip" style="display: none;">This is tooltip information</int-overlay>
-  <int-overlay class="follow" anchor=".absolute" edge="bottom" arrow>
-    Start @ bottom center and this cant fit properly in the space allowed
-  </int-overlay>
+
+  <div class="absoluteA" data-id="drag1" onmousedown="dragStart(event, this)" onmouseup="dragEnd(event, this)"></div>
+  <int-overlay anchor="[data-id='drag1']" data-overlay-id="drag1" edge="bottom" arrow>Start @ bottom center and this cant fit properly in the space allowed</int-overlay>
+  
+  <div class="absoluteB" data-id="drag2" onmousedown="dragStart(event, this)" onmouseup="dragEnd(event, this)"></div>
+  <int-overlay anchor="[data-id='drag2']" data-overlay-id="drag2" edge="left" arrow>Start @ left top and this cant fit properly in the space allowed</int-overlay>
 
   <script>
     const tooltip = document.querySelector('.tooltip');
     const tooltipTarget = document.querySelector('.target');
-    const draggable = document.querySelector('.absolute');
-    const overlayFollow = document.querySelector('.follow');
     let showToolTip = false;
     let enableDrag = false;
     let dragOffset = {x:0, y:0};
+    let overlay;
+    let draggable;
 
-    function dragStart(e) {
+    function dragStart(e, movingElement) {
+      draggable = movingElement;
+      overlay = document.querySelector(`[data-overlay-id='${movingElement.dataset.id}']`);
       const box = draggable.getBoundingClientRect();
       dragOffset = {x:0, y:0};
       dragOffset.x = e.clientX - box.left;
@@ -83,7 +97,7 @@
       if (enableDrag) {
         draggable.style.top = `${e.clientY - dragOffset.y}px`;
         draggable.style.left = `${e.clientX - dragOffset.x}px`;
-        overlayFollow.updatePositioning();
+        overlay.updatePositioning();
       }
     });
 
