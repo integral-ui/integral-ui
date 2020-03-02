@@ -51,7 +51,7 @@
 <body>
   <div class="target" style="background: green;"></div>
   <div class="absolute" onmousedown="dragStart(event)" onmouseup="dragEnd(event)" style="background: lightgray;"></div>
-  <!-- <int-overlay class="tooltip" style="display: none;">This is tooltip information</int-overlay> -->
+  <int-overlay class="tooltip" style="display: none;">This is tooltip information</int-overlay>
   <int-overlay class="follow" anchor=".absolute" edge="bottom" arrow>
     Start @ bottom center and this cant fit properly in the space allowed
   </int-overlay>
@@ -117,16 +117,14 @@
       overlay.appendChild(content)
       document.body.appendChild(overlay);
     });
-    // const tooltip = document.querySelector('.tooltip');
-    // const tooltipTarget = document.querySelector('.target');
-    // tooltipTarget.addEventListener('mouseenter', (e) => {
-    //   tooltip.style.display = "block";
-    //   showToolTip = true
-    // });
-    // tooltipTarget.addEventListener('mouseleave', (e) => {
-    //   tooltip.style.display = "none";
-    //   showToolTip = false
-    // });
+    tooltipTarget.addEventListener('mouseenter', (e) => {
+      tooltip.style.display = "block";
+      showToolTip = true
+    });
+    tooltipTarget.addEventListener('mouseleave', (e) => {
+      tooltip.style.display = "none";
+      showToolTip = false
+    });
   </script>
 
 </body>
