@@ -13,6 +13,7 @@
       margin: 0;
       font: 10px monospace;
       -webkit-user-select: none;
+      box-sizing: border-box;
     }
     html {
       height: 100%;
@@ -29,6 +30,14 @@
       height: 250px;
       border: 2px solid red;
     }
+    .target::after {
+      content: "Edge";
+      color: white;
+      font: normal 5rem sans-serif;
+      position: absolute;
+      top: calc(50% - 30px);
+      left: calc(50% - 60px);
+    }
     .absolute {
       position: absolute;
       top: 80vh;
@@ -41,11 +50,12 @@
 </head>
 <body>
   <div class="target" style="background: green;"></div>
-  <div class="absolute" onmousedown="dragStart(event, this)" onmouseup="dragEnd(event)" style="background: lightgray;"></div>
+  <div class="absolute" onmousedown="dragStart(event)" onmouseup="dragEnd(event)" style="background: lightgray;"></div>
   <!-- <int-overlay class="tooltip" style="display: none;">This is tooltip information</int-overlay> -->
   <int-overlay class="follow" anchor=".absolute" edge="bottom" arrow>
     Start @ bottom center and this cant fit properly in the space allowed
   </int-overlay>
+
   <script>
     const tooltip = document.querySelector('.tooltip');
     const tooltipTarget = document.querySelector('.target');
@@ -55,12 +65,12 @@
     let enableDrag = false;
     let dragOffset = {x:0, y:0};
 
-    function dragStart(e, el) {
-      const box = el.getBoundingClientRect();
+    function dragStart(e) {
+      const box = draggable.getBoundingClientRect();
       dragOffset = {x:0, y:0};
-      enableDrag = true;
       dragOffset.x = e.clientX - box.left;
       dragOffset.y = e.clientY - box.top;
+      enableDrag = true;
     }
     function dragEnd(e) {
       enableDrag = false;      
@@ -89,8 +99,11 @@
       {edge: "left", y: "max"},
       {edge: "right", y: "min"},
       {edge: "right", y: "center"},
-      {edge: "right", y: "30", x: "20"},
-      {edge: "right", y: "max"}
+      {edge: "right", y: "max"},
+      {edge: "right", y: 30, x: 20},
+      {edge: "top", y: 50, x: 50},
+      {x: 520, arrow: true},
+      {y: 50, x: 50, arrow: true}
     ].forEach((conf, i) => {
       let overlay = document.createElement('int-overlay');
       overlay.anchor = ".target";

@@ -37,3 +37,37 @@
   padding: 10px;
   text-align: right;
 }
+.arrow, .arrow:before {
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  border: 10px solid transparent;
+}
+.arrow:before {
+  content: '';
+}
+.arrow[data-edge=bottom]{
+  top: -20px;
+  border-bottom-color: #000;
+}
+.arrow[data-edge=bottom]:before {
+  bottom: -11px;
+  left: -10px;
+  border-bottom-color: #fff;
+}
+.arrow[data-edge=top]{
+  bottom: -20px;
+  border-top-color: #000;
+}
+.arrow[data-edge=top]:before {
+  top: -11px;
+  left: -10px;
+  border-top-color: #fff;
+}
+.arrow[data-edge=left]{
+  right: -20px;
+}
+.arrow[data-edge=right]{
+  left: -20px;
+}
