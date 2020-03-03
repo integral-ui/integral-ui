@@ -15,15 +15,16 @@ export interface Location {
 })
 export class Overlay {
 	resizeTimer;
-	hasFooter: boolean;
+	hasFooter = false;
+	hasHeader = false;
 	anchorElement: Element;
-	resolverFailedEdgePasses = [];
 	arrowEdge: Edge;
-	@Element() el: Element;
 	
+	@Element() el: Element;
 	@State() positionX = 0;
 	@State() positionY = 0;
 	@State() arrowTranslation = '';
+
 	@Prop() anchor: any = null;
 	@Prop() modal: boolean;
 	@Prop() header: string;
@@ -35,9 +36,14 @@ export class Overlay {
 
 	constructor() {}
 
+	componentWillLoad() {
+		const headerSlot = this.el.querySelector('[slot="header"]');
+		const footerSlot = this.el.querySelector('[slot="footer"]');
+		this.hasHeader = !!headerSlot;
+		this.hasFooter = !!footerSlot;
+	}
+
 	componentDidLoad() {
-		const footerSlot = this.el.shadowRoot.querySelector<HTMLSlotElement>('slot[name="footer"]');
-		this.hasFooter = !!footerSlot?.assignedElements().length;
 		if (this.anchor !== null) {
 			// replace this with type guard
 			if (typeof this.anchor === "string") {
@@ -67,7 +73,13 @@ export class Overlay {
 	@Listen('resize', { target: 'window', passive: true })
 	updateFromResize() {
 		window.clearTimeout(this.resizeTimer);
-		this.resizeTimer = window.setTimeout(() => this.setPosition(), 25);
+		this.resizeTimer = window.setTimeout(() => this.setPosition(), 0);
+	}
+	
+	@Listen('scroll', { target: 'window', passive: true })
+	updateFromScroll() {
+		window.clearTimeout(this.resizeTimer);
+		this.resizeTimer = window.setTimeout(() => this.setPosition(), 0);
 	}
 
 	@Watch('edge')
@@ -84,7 +96,9 @@ export class Overlay {
 		const numericY = ((Number.isNaN(Number(y))) ? 0 : Number(y));
 		let positionX = 0;
 		let positionY = 0;
+		let alternateEdge;
 
+		// Positioning with and without a relative anchor point
 		if (anchorRect) {
 			switch (edge) {
 				case "top":
@@ -148,65 +162,75 @@ export class Overlay {
 			}
 
 		}
-		if (positionX + contentRect.width > viewport.width) {
-			positionX = positionX - (positionX + contentRect.width - viewport.width)
+
+		// Evaluate opposite edge for better fit
+		if (edge === "top" && positionY < 0 ) {
+			alternateEdge = "bottom";
+
+		} else if (edge === "bottom" && positionY + contentRect.height > viewport.height) {
+			alternateEdge = "top";
+
+		} else if (edge === "left" && positionX < 0) {
+			alternateEdge = "right";
+
+		} else if (edge === "right" && positionX + contentRect.width > viewport.width) {
+			alternateEdge = "left";
+		}		
+		if (alternateEdge) {
+			let newPos = this.calculatePosition(alternateEdge, this.x, this.y, offset, contentRect, anchorRect);
+			edge = newPos.edge;
+			positionX = newPos.x;
+			positionY = newPos.y;
 		}
-		if (positionX < 0) {
-			positionX = 0;
+
+		// Keep overlay on-screen (unless anchor is clipped)
+		if (!anchorRect || (anchorRect.left > 0 && anchorRect.top > 0 && anchorRect.right < viewport.width && anchorRect.bottom < viewport.height )) {
+
+			if (positionX + contentRect.width > viewport.width) {
+				positionX = positionX - (positionX + contentRect.width - viewport.width)
+			}
+			if (positionX < 0) {
+				positionX = 0;
+			}
+			if (positionY + contentRect.height > viewport.height) {
+				positionY = positionY - (positionY + contentRect.height - viewport.height)
+			}
+			if (positionY < 0) {
+				positionY = 0;
+			}
 		}
-		if (positionY + contentRect.height > viewport.height) {
-			positionY = positionY - (positionY + contentRect.height - viewport.height)
-		}
-		if (positionY < 0) {
-			positionY = 0;
-		}
+
 		return {
 			edge: edge,
-			x: positionX,
-			y: positionY
+			x: Math.round(positionX),
+			y: Math.round(positionY)
 		}
 	}
 
 	setPosition() {
-		const viewport = { width: window.innerWidth, height: window.innerHeight };
 		const content: Element = this.el.shadowRoot.querySelector('.content');
 		const contentRect: ClientRect = content.getBoundingClientRect();
 		const targetBounds: ClientRect = (this.anchorElement) ? this.anchorElement.getBoundingClientRect() : undefined;
 		const arrowWidthHeight = (this.arrow) ? 10 : 0;
-		let alternateEdge;
 
 		let loc: Location = this.calculatePosition(this.edge, this.x, this.y, arrowWidthHeight, contentRect, targetBounds);
 
-		if (loc.y <= 0 && loc.edge === "top") {
-			alternateEdge = "bottom";
-		} else if (loc.y + contentRect.height >= viewport.height && loc.edge === "bottom") {
-			alternateEdge = "top";
+		if (loc.x !== this.positionX) {
+			this.positionX = loc.x;
 		}
-		if (loc.x < 0 && loc.edge === "left") {
-			alternateEdge = "right";
-		} else if (loc.x + contentRect.width >= viewport.width && loc.edge === "right") {
-			alternateEdge = "left";
-		}
-		if (alternateEdge) {
-			loc = this.calculatePosition(alternateEdge, this.x, this.y, arrowWidthHeight, contentRect, targetBounds);
-		}
-
-		if (Math.round(loc.x) !== this.positionX) {
-			this.positionX = Math.round(loc.x);
-		}
-		if (Math.round(loc.y) !== this.positionY) {
-			this.positionY = Math.round(loc.y);
+		if (loc.y !== this.positionY) {
+			this.positionY = loc.y;
 		}
 
 		if (this.arrow) {
-			let [start, p0, p1, p2, p3, arrowOffset] = [0,0,0,0,0,0];
+			let [start, p0, p1, p2, arrowOffset] = [0,0,0,0,0];
 			this.arrowEdge = loc.edge;
 			let plane = (loc.edge === 'bottom' || loc.edge === 'top') ? 'X' : 'Y';
 			if (this.arrowEdge === "top" || this.arrowEdge === "bottom") {
-				[p0, p1, p2, p3] = [targetBounds.left, targetBounds.right, this.positionX, this.positionX + contentRect.width].sort((a,b) => a - b)
+				[p0, p1, p2] = [targetBounds.left, targetBounds.right, this.positionX, this.positionX + contentRect.width].sort((a,b) => a - b)
 				start = (this.positionX <= targetBounds.left) ? p1 - p0 : 0
 			} else {
-				[p0, p1, p2, p3] = [targetBounds.top, targetBounds.bottom, this.positionY, this.positionY + contentRect.height].sort((a,b) => a - b)
+				[p0, p1, p2] = [targetBounds.top, targetBounds.bottom, this.positionY, this.positionY + contentRect.height].sort((a,b) => a - b)
 				start = (this.positionY <= targetBounds.top) ? p1 - p0 : 0
 			}
 			arrowOffset = start + ( (p2 - p1) / 2 );
@@ -216,6 +240,7 @@ export class Overlay {
 			}
 		}
 	}
+	
 	render() {
 		return (
 			<Host class={this.modal ? "hasModalBackdrop" : ""}>
@@ -223,8 +248,10 @@ export class Overlay {
 					{this.arrow &&
 						<div class="arrow" data-edge={this.arrowEdge} style={{ transform: this.arrowTranslation }}></div>
 					}
-					{this.header &&
-						<div class="header">{this.header}</div>
+					{this.hasHeader &&
+						<div class="header">
+							<slot name="header"></slot>
+						</div>
 					}
 					<div class="body">
 						<slot name="body"></slot>

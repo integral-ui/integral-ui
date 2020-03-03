@@ -16,7 +16,7 @@
 .content {
   box-sizing: border-box;
   background-color: #fff;
-  position: absolute;
+  position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
@@ -79,12 +79,12 @@
   border-left-color: #fff;
 }
 .arrow[data-edge=right]{
-  bottom: -20px;
+  left: -20px;
   margin-top: -10px;
-  border-top-color: #000;
+  border-right-color: #000;
 }
 .arrow[data-edge=right]:before {
-  top: -9px;
-  left: -10px;
-  border-top-color: #fff;
+  left: -9px;
+  top: -10px;
+  border-right-color: #fff;
 }
