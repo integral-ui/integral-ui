@@ -14,7 +14,7 @@ export interface Location {
 	shadow: true
 })
 export class Overlay {
-	resizeTimer;
+	redrawTimer;
 	hasFooter = false;
 	hasHeader = false;
 	anchorElement: Element;
@@ -67,19 +67,19 @@ export class Overlay {
 	}
 
 	componentDidUnload() {
-		window.clearTimeout(this.resizeTimer);
+		window.clearTimeout(this.redrawTimer);
 	}
 
 	@Listen('resize', { target: 'window', passive: true })
 	updateFromResize() {
-		window.clearTimeout(this.resizeTimer);
-		this.resizeTimer = window.setTimeout(() => this.setPosition(), 0);
+		window.clearTimeout(this.redrawTimer);
+		this.redrawTimer = window.setTimeout(() => this.setPosition(), 0);
 	}
 	
 	@Listen('scroll', { target: 'window', passive: true })
 	updateFromScroll() {
-		window.clearTimeout(this.resizeTimer);
-		this.resizeTimer = window.setTimeout(() => this.setPosition(), 0);
+		window.clearTimeout(this.redrawTimer);
+		this.redrawTimer = window.setTimeout(() => this.setPosition(), 0);
 	}
 
 	@Watch('edge')
@@ -187,13 +187,13 @@ export class Overlay {
 		if (!anchorRect || (anchorRect.left > 0 && anchorRect.top > 0 && anchorRect.right < viewport.width && anchorRect.bottom < viewport.height )) {
 
 			if (positionX + contentRect.width > viewport.width) {
-				positionX = positionX - (positionX + contentRect.width - viewport.width)
+				positionX = positionX - (positionX + contentRect.width - viewport.width);
 			}
 			if (positionX < 0) {
 				positionX = 0;
 			}
 			if (positionY + contentRect.height > viewport.height) {
-				positionY = positionY - (positionY + contentRect.height - viewport.height)
+				positionY = positionY - (positionY + contentRect.height - viewport.height);
 			}
 			if (positionY < 0) {
 				positionY = 0;
