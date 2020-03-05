@@ -1,5 +1,10 @@
 :host {
   display: block;
+  position: fixed;
+  --overlay-header-bg: #efefef;
+  --overlay-border-style: 1px solid #000;
+  --overlay-border-radius: 0px;
+  --elevation-depth-0: 0 7px 20px -14px rgba(0,0,0,0.75);
 }
 
 :host(.hasModalBackdrop)::before {
@@ -20,7 +25,9 @@
   z-index: 1;
   top: 0;
   left: 0;
-  border: 1px solid #000;
+  border: var(--overlay-border-style);
+  border-radius: var(--overlay-border-radius);
+  box-shadow: var(--elevation-depth-0);
 }
 
 .header {

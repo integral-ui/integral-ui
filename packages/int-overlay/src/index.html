@@ -14,12 +14,12 @@
       -webkit-user-select: none;
       box-sizing: border-box;
     }
+    
     html {
       font: 12px sans-serif;
       height: 100%;
     }
-    body {
-    }
+
     .target {
       width: 600px;
       height: 250px;
@@ -28,10 +28,12 @@
       top: calc(50% - 125px);
       left: calc(50% - 300px);
     }
+    
     .target::after {
       content: "edges";
       color: white;
     }
+    
     .absoluteA {
       position: absolute;
       top: 80vh;
@@ -51,9 +53,92 @@
       background-color: burlywood;
     }
   </style>
+  <script>
+    let dragStart, dragEnd;
+    (function() {
+      document.addEventListener('DOMContentLoaded', () => {
+        const tooltip = document.querySelector('.tooltip');
+        const tooltipTarget = document.querySelector('.target');
+        let showToolTip = false;
+        let enableDrag = false;
+        let dragOffset = {x:0, y:0};
+        let overlay;
+        let draggable;
+
+        dragStart = (e, movingElement) => {
+          draggable = movingElement;
+          const box = draggable.getBoundingClientRect();
+          overlay = document.querySelector(`[data-overlay-id='${movingElement.dataset.id}']`);
+          overlay.bringToFront();
+          dragOffset = {x:0, y:0};
+          dragOffset.x = e.clientX - box.left;
+          dragOffset.y = e.clientY - box.top;
+          enableDrag = true;
+        };
+
+        dragEnd = (e) => {
+          enableDrag = false;      
+        };
+
+        document.addEventListener('mousemove', (e) => {
+          if (showToolTip) {
+            tooltip.x = e.clientX + 12;
+            tooltip.y = e.clientY + 12;
+          }
+          if (enableDrag) {
+            draggable.style.top = `${e.clientY + window.scrollY - dragOffset.y}px`;
+            draggable.style.left = `${e.clientX + window.scrollX - dragOffset.x}px`;
+            overlay.updatePositioning();
+          }
+        });
+
+        [
+          {edge: "top", x: "min"},
+          {edge: "top", x: "center"},
+          {edge: "top", x: "max"},
+          {edge: "bottom", x: "min"},
+          {edge: "bottom", x: "center"},
+          {edge: "bottom", x: "max"},
+          {edge: "left", y: "min"},
+          {edge: "left", y: "center"},
+          {edge: "left", y: "max"},
+          {edge: "right", y: "min"},
+          {edge: "right", y: "center"},
+          {edge: "right", y: "max"},
+          {edge: "right", y: 30, x: 20},
+          {edge: "top", y: 50, x: 50},
+          {x: 520, arrow: true},
+          {y: 50, x: 50, arrow: true}
+        ].forEach((conf, i) => {
+          let overlay = document.createElement('int-overlay');
+          overlay.anchor = ".target";
+          overlay.edge = conf.edge;
+          overlay.x = conf.x;
+          overlay.y = conf.y;
+          overlay.arrow = !!conf.arrow
+          let content = document.createElement('span');
+          content.slot = "body";
+          content.innerText = `${conf.edge} (${conf.x},${conf.y})`;
+          overlay.appendChild(content)
+          document.body.appendChild(overlay);
+        });
+        tooltipTarget.addEventListener('mouseenter', (e) => {
+          tooltip.bringToFront();
+          tooltip.style.display = "block";
+          showToolTip = true
+        });
+        tooltipTarget.addEventListener('mouseleave', (e) => {
+          tooltip.style.display = "none";
+          showToolTip = false
+        });
+      });
+    }());
+  </script>
 </head>
 <body>
+  <div style="height: 2000px; width: 20px; background-color: brown;"></div>
   <div class="target" style="background: green;"></div>
+
   <int-overlay class="tooltip" style="display: none;">This is tooltip information</int-overlay>
 
   <div class="absoluteA" data-id="drag1" onmousedown="dragStart(event, this)" onmouseup="dragEnd(event, this)"></div>
@@ -65,7 +150,6 @@
   </int-overlay>
   
   <div class="absoluteB" data-id="drag2" onmousedown="dragStart(event, this)" onmouseup="dragEnd(event, this)"></div>
-  
   <int-overlay anchor="[data-id='drag2']" data-overlay-id="drag2" edge="left" y="min" arrow>
     <div slot="header">
       Header <strong>HTML</strong> here
@@ -85,79 +169,5 @@
     </div>
   </int-overlay>
 
-  <script>
-    const tooltip = document.querySelector('.tooltip');
-    const tooltipTarget = document.querySelector('.target');
-    let showToolTip = false;
-    let enableDrag = false;
-    let dragOffset = {x:0, y:0};
-    let overlay;
-    let draggable;
-
-    function dragStart(e, movingElement) {
-      draggable = movingElement;
-      overlay = document.querySelector(`[data-overlay-id='${movingElement.dataset.id}']`);
-      const box = draggable.getBoundingClientRect();
-      dragOffset = {x:0, y:0};
-      dragOffset.x = e.clientX - box.left;
-      dragOffset.y = e.clientY - box.top;
-      enableDrag = true;
-    }
-    function dragEnd(e) {
-      enableDrag = false;      
-    }
-    document.addEventListener('mousemove', (e) => {
-      if (showToolTip) {
-        tooltip.x = e.clientX + 12;
-        tooltip.y = e.clientY + 12;
-      }
-      if (enableDrag) {
-        draggable.style.top = `${e.clientY + window.scrollY - dragOffset.y}px`;
-        draggable.style.left = `${e.clientX + window.scrollX - dragOffset.x}px`;
-        overlay.updatePositioning();
-      }
-    });
-
-    [
-      {edge: "top", x: "min"},
-      // {edge: "top", x: "center"},
-      // {edge: "top", x: "max"},
-      // {edge: "bottom", x: "min"},
-      // {edge: "bottom", x: "center"},
-      // {edge: "bottom", x: "max"},
-      // {edge: "left", y: "min"},
-      // {edge: "left", y: "center"},
-      // {edge: "left", y: "max"},
-      // {edge: "right", y: "min"},
-      // {edge: "right", y: "center"},
-      // {edge: "right", y: "max"},
-      // {edge: "right", y: 30, x: 20},
-      // {edge: "top", y: 50, x: 50},
-      // {x: 520, arrow: true},
-      // {y: 50, x: 50, arrow: true}
-    ].forEach((conf, i) => {
-      let overlay = document.createElement('int-overlay');
-      overlay.anchor = ".target";
-      overlay.edge = conf.edge;
-      overlay.x = conf.x;
-      overlay.y = conf.y;
-      overlay.arrow = !!conf.arrow
-      let content = document.createElement('span');
-      content.slot = "body";
-      content.innerText = `${conf.edge} (${conf.x},${conf.y})`;
-      overlay.appendChild(content)
-      document.body.appendChild(overlay);
-    });
-    tooltipTarget.addEventListener('mouseenter', (e) => {
-      tooltip.style.display = "block";
-      showToolTip = true
-    });
-    tooltipTarget.addEventListener('mouseleave', (e) => {
-      tooltip.style.display = "none";
-      showToolTip = false
-    });
-  </script>
-
-  <div style="height: 2000px; width: 20px; background-color: brown;"></div>
 </body>
 </html>

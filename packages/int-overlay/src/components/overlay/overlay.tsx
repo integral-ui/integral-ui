@@ -1,4 +1,5 @@
 import { Component, Host, h, Element, Prop, State, Listen, Watch, Method } from '@stencil/core';
+import { getNextDepth } from '../../utils/constants'
 
 export type Edge = "top" | "left" | "bottom" | "right";
 export type Pos = "center" | "min" | "max" | number;
@@ -8,6 +9,7 @@ export interface Location {
 	x: number,
 	y: number
 }
+
 @Component({
 	tag: 'int-overlay',
 	styleUrl: 'overlay.css',
@@ -24,6 +26,7 @@ export class Overlay {
 	@State() positionX = 0;
 	@State() positionY = 0;
 	@State() arrowTranslation = '';
+	@State() zIndex = 0;
 
 	@Prop() anchor: any = null;
 	@Prop() modal: boolean;
@@ -34,7 +37,8 @@ export class Overlay {
 	@Prop() x: Pos = "center";
 	@Prop() y: Pos = "center";
 
-	constructor() {}
+	constructor() {
+	}
 
 	componentWillLoad() {
 		const headerSlot = this.el.querySelector('[slot="header"]');
@@ -62,7 +66,8 @@ export class Overlay {
 		return new Promise((resp) => {
 			resp();
 		}).then(() => {
-			this.setPosition()
+			this.bringToFront();			
+			this.setPosition();			
 		})
 	}
 
@@ -135,9 +140,29 @@ export class Overlay {
 					positionY = (anchorRect.top + (anchorRect.height / 2)) - (contentRect.height / 2);
 				} else {
 					positionY = anchorRect.top + Number(y);
-				}
-				
+				}				
 			}
+			
+			// Evaluate opposite edge for better fit
+			if (edge === "top" && positionY < 0 ) {
+				alternateEdge = "bottom";
+
+			} else if (edge === "bottom" && positionY + contentRect.height > viewport.height) {
+				alternateEdge = "top";
+
+			} else if (edge === "left" && positionX < 0) {
+				alternateEdge = "right";
+
+			} else if (edge === "right" && positionX + contentRect.width > viewport.width) {
+				alternateEdge = "left";
+			}		
+			if (alternateEdge) {
+				let newPos = this.calculatePosition(alternateEdge, this.x, this.y, offset, contentRect, anchorRect);
+				edge = newPos.edge;
+				positionX = newPos.x;
+				positionY = newPos.y;
+			}
+			
 
 		} else {
 
@@ -161,26 +186,6 @@ export class Overlay {
 				positionY = Number(y);
 			}
 
-		}
-
-		// Evaluate opposite edge for better fit
-		if (edge === "top" && positionY < 0 ) {
-			alternateEdge = "bottom";
-
-		} else if (edge === "bottom" && positionY + contentRect.height > viewport.height) {
-			alternateEdge = "top";
-
-		} else if (edge === "left" && positionX < 0) {
-			alternateEdge = "right";
-
-		} else if (edge === "right" && positionX + contentRect.width > viewport.width) {
-			alternateEdge = "left";
-		}		
-		if (alternateEdge) {
-			let newPos = this.calculatePosition(alternateEdge, this.x, this.y, offset, contentRect, anchorRect);
-			edge = newPos.edge;
-			positionX = newPos.x;
-			positionY = newPos.y;
 		}
 
 		// Keep overlay on-screen (unless anchor is clipped)
@@ -240,10 +245,15 @@ export class Overlay {
 			}
 		}
 	}
-	
+
+	@Method()
+	bringToFront() {
+		this.zIndex = getNextDepth();
+	}
+
 	render() {
 		return (
-			<Host class={this.modal ? "hasModalBackdrop" : ""}>
+			<Host class={this.modal ? "hasModalBackdrop" : ""} style={{zIndex: `${this.zIndex}` }}>
 				<div class="content" style={{ transform: `translate(${this.positionX}px, ${this.positionY}px)` }}>
 					{this.arrow &&
 						<div class="arrow" data-edge={this.arrowEdge} style={{ transform: this.arrowTranslation }}></div>
