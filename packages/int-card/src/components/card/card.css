@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  --border-style: 1px solid #cccccc;
+  border: var(--border-style);
+}
+
+.header {
+  border-bottom: var(--border-style);
+}
+.footer {
+  border-top: var(--border-style);
+}
+
+[name=body]::slotted([slot=body]) {
+  display: flex;
+}
+
+/* [name="body"]::slotted([itemtype="http://schema.org/Person"] [itemprop="name"]) {
+}
+.body [itemtype="http://schema.org/Person"] [itemprop="jobTitle"] {
+}
+.body [itemtype="http://schema.org/Person"] [itemprop="address"] {
+} */
