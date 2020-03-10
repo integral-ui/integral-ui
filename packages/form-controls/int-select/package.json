@@ -1,5 +1,5 @@
 {
-  "name": "@integral-ui/int-select",
+  "name": "@integralui/int-select",
   "version": "0.0.1-alpha.1",
   "description": "Stencil Component Starter",
   "main": "dist/index.js",
@@ -30,7 +30,7 @@
     "puppeteer": "2.0.0"
   },
   "dependencies": {
-    "@integral-ui/int-checkbox": "^0.0.1-alpha.1",
+    "@integralui/int-checkbox": "^0.0.1-alpha.1",
     "@stencil/core": "1.8.6",
     "stencil": "0.0.5"
   },

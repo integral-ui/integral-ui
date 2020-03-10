@@ -1,5 +1,5 @@
 import { Component, Host, h, EventEmitter, Prop, Event, Element } from '@stencil/core';
-import '@integral-ui/int-checkbox';
+import '@integralui/int-checkbox';
 
 @Component({
     tag: 'int-select-item',
