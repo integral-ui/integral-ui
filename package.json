@@ -8,7 +8,7 @@
     "test": "lerna run test",
     "build": "lerna run build",
     "commit": "git-cz",
-    "update:stencil": "lerna add stencil@latest --exact"
+    "update:stencil": "lerna add @stencil/core@latest --exact"
   },
   "name": "integralui",
   "devDependencies": {
