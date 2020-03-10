@@ -25,3 +25,5 @@ test/fixtures/**/.fbkpm
 .pnp
 /packages/lockfile/index.js
 .vscode/
+components.d.ts
+.DS_Store

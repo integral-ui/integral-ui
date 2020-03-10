@@ -1,5 +1,5 @@
 {
-  "name": "@integralui/int-checkbox",
+  "name": "@integral-ui/int-checkbox",
   "version": "0.0.1-alpha.1",
   "description": "Stencil Component Starter",
   "main": "dist/index.js",
