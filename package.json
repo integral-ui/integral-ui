@@ -8,9 +8,10 @@
     "test": "lerna run test",
     "build": "lerna run build",
     "commit": "git-cz",
-    "update:stencil": "lerna add @stencil/core@latest --exact"
+    "update:stencil": "lerna add @stencil/core@latest --exact -D",
+    "start:scope": "lerna run start --scope"
   },
-  "name": "integralui",
+  "name": "integral-ui",
   "devDependencies": {
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.1.0",
