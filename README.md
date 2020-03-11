@@ -8,7 +8,7 @@
 
 ## Run a component dev server
 
-``lerna run start --scope @integralui/int-<component-name>``
+``lerna run start --scope @integral-ui/int-<component-name>``
 
 ## Create a component
 
