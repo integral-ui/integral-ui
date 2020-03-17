@@ -1,5 +1,5 @@
 {
-  "name": "@integralui/int-overlay",
+  "name": "@integral-ui/int-overlay",
   "version": "0.0.1",
   "description": "Stencil Component Starter",
   "main": "dist/index.js",

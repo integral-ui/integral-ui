@@ -7,6 +7,7 @@
   "scripts": {
     "test": "lerna run test",
     "build": "lerna run build",
+    "bootstrap": "lerna bootstrap",
     "commit": "git-cz",
     "update:stencil": "lerna add stencil@latest --exact"
   },

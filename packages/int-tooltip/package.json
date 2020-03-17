@@ -1,5 +1,5 @@
 {
-  "name": "int-tooltip",
+  "name": "@integral-ui/int-tooltip",
   "version": "0.0.1",
   "description": "Stencil Component Starter",
   "main": "dist/index.js",
@@ -22,7 +22,17 @@
     "generate": "stencil generate"
   },
   "devDependencies": {
-    "@stencil/core": "^1.8.8"
+    "@stencil/core": "^1.8.4",
+    "@types/jest": "24.0.25",
+    "@types/puppeteer": "1.20.3",
+    "jest": "24.9.0",
+    "jest-cli": "24.9.0",
+    "puppeteer": "1.20.0"
+  },
+  "dependencies": {
+    "@integral-ui/int-overlay": "^0.0.1",
+    "@stencil/core": "1.8.6",
+    "stencil": "0.0.5"
   },
   "license": "MIT"
 }
