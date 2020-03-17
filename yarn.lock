@@ -1180,10 +1180,10 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@stencil/core@1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-1.9.0.tgz#58ad9e71d0268e5bb1dd4b78b192b2c83e594d0b"
-  integrity sha512-GebQiDqR04owD1NkCVDYUQduQIPdIsGW7K70hmuW1KLrWURdaaECQeBQJOAE1pasZMg8vYoSRFt3LeCE7nsJAQ==
+"@stencil/core@1.9.1":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-1.9.1.tgz#7c47a3f1c10a5195727ec629f232918efd892988"
+  integrity sha512-UGKlrYnphHZMlDIjcTFcQ2LRQF8O3xV5J+AWtMBbjgb8VAiS3jlFiuo1FddCpa2ehTki0ZZdkU6wIsYx0qI05g==
   dependencies:
     typescript "3.8.3"
 
@@ -6077,13 +6077,6 @@ stealthy-require@^1.1.1:
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
 
-stencil@0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/stencil/-/stencil-0.0.5.tgz#d71fdd933e3b1f724736b5c388f191a7e7fc1d47"
-  integrity sha1-1x/dkz47H3JHNrXDiPGRp+f8HUc=
-  dependencies:
-    xmldom "0.1.15"
-
 stream-each@^1.1.0:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/stream-each/-/stream-each-1.2.3.tgz#ebe27a0c389b04fbcc233642952e10731afa9bae"
@@ -6761,11 +6754,6 @@ xml-name-validator@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-3.0.0.tgz#6ae73e06de4d8c6e47f9fb181f78d648ad457c6a"
   integrity sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==
-
-xmldom@0.1.15:
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.15.tgz#b3048062f1bdd52edc421424459f06dceeb2f94d"
-  integrity sha1-swSAYvG91S7cQhQkRZ8G3O6y+U0=
 
 xtend@~4.0.1:
   version "4.0.2"
