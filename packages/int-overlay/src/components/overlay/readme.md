@@ -23,7 +23,7 @@
 
 ### `bringToFront() => Promise<void>`
 
-
+Sets this `<int-overlay>` to have the highest z-index relative to other `<int-*>` elements
 
 #### Returns
 
