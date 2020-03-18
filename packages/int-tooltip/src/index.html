@@ -7,13 +7,54 @@
 
   <script type="module" src="/build/int-tooltip.esm.js"></script>
   <script nomodule src="/build/int-tooltip.js"></script>
-
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+    div {
+      flex: 0 1 auto;
+      width: 100px;
+      height: 100px;
+      background: #efefef;
+      box-sizing: border-box;
+    }
+    int-tooltip {
+      font: bold 12px sans-serif;
+    }
+    int-tooltip[selector] {
+      --tooltip-background: transparent;
+      --tooltip-border-color: transparent;
+      --tooltip-padding: 0;
+      --tooltip-shadow: none;
+    }
+  </style>
 </head>
 <body>
-
-  <int-tooltip>Static Info about a default element</int-tooltip>
+  <int-tooltip>Content from slot</int-tooltip>
+  
+  <int-tooltip selector="[data-custom-tooltip]">
+    <div style="
+      color: #0a3f92;
+      border-radius: 10px;
+      border: 2px solid seagreen;
+      padding: 5px 10px;
+    ">
+      Customization with <strong style="font-style: oblique;">styles and HTML</strong> is possible
+    </div>
+  </int-tooltip>
 
   <div class="targetA" data-int-tooltip></div>
+
+  <div class="targetB" data-int-tooltip="Plaintext content from target"></div>
+  
+  <div class="targetD" data-custom-tooltip></div>
+  
+  <div class="targetE" data-int-tooltip>
+    <div style="width: 75px; height: 50px; background-color: salmon;">No tooltip here</div>
+  </div>
+
 
 </body>
 </html>
