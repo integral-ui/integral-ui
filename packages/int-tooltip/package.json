@@ -1,5 +1,5 @@
 {
-  "name": "@integral-ui/int-overlay",
+  "name": "@integral-ui/int-tooltip",
   "version": "0.0.1",
   "description": "Stencil Component Starter",
   "main": "dist/index.js",
@@ -9,7 +9,7 @@
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "collection:main": "dist/collection/index.js",
-  "unpkg": "dist/int-overlay/int-overlay.js",
+  "unpkg": "dist/int-tooltip/int-tooltip.js",
   "files": [
     "dist/",
     "loader/"
@@ -28,6 +28,9 @@
     "jest": "24.9.0",
     "jest-cli": "24.9.0",
     "puppeteer": "1.20.0"
+  },
+  "dependencies": {
+    "@integral-ui/int-overlay": "^0.0.1"
   },
   "license": "MIT"
 }
