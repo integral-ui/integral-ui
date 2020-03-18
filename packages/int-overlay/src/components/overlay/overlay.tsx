@@ -87,11 +87,14 @@ export class Overlay {
 		this.redrawTimer = window.setTimeout(() => this.setPosition(), 0);
 	}
 
+	/**
+	 * Forces a refresh to the `xy` coordinates as well as the `edge` of the Overlay
+	 */
 	@Watch('edge')
 	@Watch('x')
 	@Watch('y')
 	@Method()
-	updatePositioning() {
+	async updatePositioning() {
 		this.setPosition();
 	}
 
@@ -245,9 +248,12 @@ export class Overlay {
 			}
 		}
 	}
-
+	
+	/**
+	 * Sets this `<int-overlay>` to have the highest z-index relative to other `<int-*>` elements
+	 */
 	@Method()
-	bringToFront() {
+	async bringToFront() {
 		this.zIndex = getNextDepth();
 	}
 
