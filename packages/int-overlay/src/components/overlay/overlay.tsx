@@ -48,21 +48,10 @@ export class Overlay {
 	}
 
 	componentDidLoad() {
-		if (this.anchor !== null) {
-			// replace this with type guard
-			if (typeof this.anchor === "string") {
-				try {
-					this.anchorElement = document.querySelector(this.anchor);
-				} catch {
-					throw new Error('Anchor is not a valid selector')
-				}
-			} else if (this.anchor.nodeName) {
-				this.anchorElement = this.anchor;
-			} else {
-				throw new Error('Anchor must be a valid selector or DOM element')
-			}
-
-		}
+		this.updateAnchor();
+		this.el.shadowRoot.addEventListener('slotchange', () => {
+			this.updatePositioning();
+		});		
 		return new Promise((resp) => {
 			resp();
 		}).then(() => {
@@ -87,9 +76,29 @@ export class Overlay {
 		this.redrawTimer = window.setTimeout(() => this.setPosition(), 0);
 	}
 
+	@Watch('anchor')
+	updateAnchor() {
+		if (this.anchor !== null) {
+			// replace this with type guard
+			if (typeof this.anchor === "string") {
+				try {
+					this.anchorElement = document.querySelector(this.anchor);
+				} catch {
+					throw new Error('Anchor is not a valid selector')
+				}
+			} else if (this.anchor.nodeName) {
+				this.anchorElement = this.anchor;
+			} else {
+				throw new Error('Anchor must be a valid selector or DOM element')
+			}
+		}
+	}
+
 	/**
 	 * Forces a refresh to the `xy` coordinates as well as the `edge` of the Overlay
 	 */
+	@Watch('anchor')
+	@Watch('arrow')
 	@Watch('edge')
 	@Watch('x')
 	@Watch('y')

@@ -33,7 +33,7 @@ Type: `Promise<void>`
 
 ### `updatePositioning() => Promise<void>`
 
-
+Forces a refresh to the `xy` coordinates as well as the `edge` of the Overlay
 
 #### Returns
 
