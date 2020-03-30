@@ -1,4 +1,5 @@
 import { Component, Host, h, Prop, State, Listen, Element, EventEmitter, Event } from '@stencil/core';
+import { Pos, Edge } from '@integral-ui/int-overlay/dist/types/components/overlay/overlay';
 import "@integral-ui/int-overlay";
 
 @Component({
@@ -9,82 +10,93 @@ import "@integral-ui/int-overlay";
 export class Tooltip {
 
   private overlay: HTMLIntOverlayElement;
+  private listener;
 
-  @Element()
-  host: Element;
+  @Element() host: Element;
 
-  @Prop()
-  selector: string = '[data-int-tooltip]';
+  @State() displayTooltip: boolean = false;
+  @State() x: Pos;
+  @State() y: Pos;
 
-  @Prop()
-  offsetX: number = 12;
+  @Prop() selector: string = '[data-int-tooltip]';
+  @Prop() offsetX: number = 12;
+  @Prop() offsetY: number = 12;
+  @Prop() edge: Edge;
+  @Prop() arrow: boolean;
 
-  @Prop()
-  offsetY: number = 12;
+  @Event() integralShowTooltip: EventEmitter;
+  @Event() integralHideTooltip: EventEmitter;
 
-  @Prop()
-  content: string;
+  constructor() {
+  }
 
-  @State()
-  displayTooltip: boolean = false;
-
-  @Event()
-  showTooltip: EventEmitter;
-
-  @Event()
-  hideTooltip: EventEmitter;
-
-  @Listen('mousemove', { target: 'document' })
-  trackPosition(event: MouseEvent) {
+  @Listen('mouseover', { target: 'body', capture: true, passive: true })
+  enableTooltip(event: MouseEvent) {
     const target = event.target as HTMLElement;
     if (target.matches(this.selector)) {
-      if (!this.isEnabled()) {
-        this.setContent(target);
-        this.enable();
+      if (!this.edge) {
+        this.attachListener(target);
+      } else {
+        this.overlay.anchor = event.target;
+        this.overlay.arrow = true;
       }
-      this.follow(event.clientX, event.clientY);
-    } else {
-      this.disable();
+      this.enable(target);
     }
+  }
 
+  @Listen('mouseout', { target: 'body', capture: true, passive: true })
+  disableTooltip(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (target.matches(this.selector)) {
+      this.detachListener(target);
+      this.disable(target);
+    }
   }
 
   componentDidLoad() {
     this.overlay = this.host.shadowRoot.querySelector("int-overlay");
   }
 
-  setContent(target) {
-    const content = target.dataset.intTooltip;
-    if (content) {
-      this.overlay.innerText = content;
-    } else {
-      this.overlay.innerHTML = this.host.innerHTML;
-    }
-  }
-
-  enable() {
+  enable(target) {
     this.displayTooltip = true;
+    this.integralShowTooltip.emit({
+      target: target,
+      tooltip: this.host
+    });
   }
 
-  disable() {
+  disable(target) {
     this.displayTooltip = false;
+    this.integralHideTooltip.emit({
+      target: target,
+      tooltip: this.host
+    });
   }
 
   isEnabled() {
     return this.displayTooltip;
   }
 
-  follow(x: number, y: number) {
-    if (this.isEnabled()) {
-      this.overlay.x = x + this.offsetX;
-      this.overlay.y = y + this.offsetY;
-    }
+  attachListener(target) {
+    this.listener = (event) => {
+      this.trackPosition(event);
+    };
+    target.addEventListener('mousemove', this.listener);
+  }
+  
+  detachListener(target) {
+    target.removeEventListener('mousemove', this.listener);
+  }
+
+  trackPosition(event: MouseEvent) {
+    this.x = event.clientX + this.offsetX;
+    this.y = event.clientY + this.offsetY;
   }
 
   render() {
     return (
       <Host>
-        <int-overlay style={{ display: `${this.isEnabled() ? 'block' : 'none'}` }}>
+        <int-overlay x={this.x} y={this.y} edge={this.edge} style={{visibility: `${this.isEnabled() ? 'visible' : 'hidden'}`}} >
           <slot></slot>
         </int-overlay>
       </Host>
