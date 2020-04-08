@@ -1180,10 +1180,10 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@stencil/core@1.9.1":
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-1.9.1.tgz#7c47a3f1c10a5195727ec629f232918efd892988"
-  integrity sha512-UGKlrYnphHZMlDIjcTFcQ2LRQF8O3xV5J+AWtMBbjgb8VAiS3jlFiuo1FddCpa2ehTki0ZZdkU6wIsYx0qI05g==
+"@stencil/core@1.12.3":
+  version "1.12.3"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-1.12.3.tgz#e9641729dbc1788ccb709487630c5a677e913efa"
+  integrity sha512-Qt3issn/r89hpx1feNOJnyEDHIuHsQqnLcv0tvuAHMO1PAi5B+T3qMT0jjtSuAnBrP9w96qo5Is16K43Su9IsA==
   dependencies:
     typescript "3.8.3"
 
