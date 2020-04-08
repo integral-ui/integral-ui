@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>Stencil Component Starter</title>
+
+  <script type="module" src="/build/int-tooltip.esm.js"></script>
+  <script nomodule src="/build/int-tooltip.js"></script>
+  <style>
+    .targets {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .targets > div {
+      flex: 0 1 auto;
+      width: 100px;
+      height: 100px;
+      background: #efefef;
+      box-sizing: border-box;
+    }
+
+    int-tooltip {
+      font: bold 12px sans-serif;
+    }
+
+    int-tooltip[selector="[data-custom-tooltip-with-html]"] {
+      --tooltip-background: transparent;
+      --tooltip-border-color: transparent;
+      --tooltip-padding: 0;
+      --tooltip-shadow: none;
+      --tooltip-color: orange;
+    }
+
+    div.customTooltip {
+      color: #0a3f92;
+      border-radius: 10px;
+      border: 2px solid seagreen;
+      padding: 5px 10px;
+    }
+    div.customTooltip strong {
+      font-style: oblique;
+      color: royalblue;
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      window.setInterval(() => {
+        document.querySelector('#updater').innerText = performance.now();
+      })
+    });
+    document.addEventListener('integralShowTooltip', (event) => {
+      const {target, tooltip} = event.detail;
+      if (target.dataset.tooltipContent) {
+        tooltip.innerText = target.dataset.tooltipContent;
+      }
+      if (target.dataset.customTooltipWithHtml) {
+        tooltip.querySelector('#content').innerText = target.dataset.customTooltipWithHtml;
+      }
+      if (target.dataset.intTooltipFixed) {
+        tooltip.innerText = target.dataset.intTooltipFixed;
+      }
+    })
+    document.addEventListener('integralHideTooltip', (event) => {
+      const {target, tooltip} = event.detail;
+    })
+  </script>
+</head>
+
+<body>
+  
+  <int-tooltip></int-tooltip>
+  
+  <int-tooltip selector="[data-int-tooltip-fixed]" edge="bottom">
+    This is fixed content
+  </int-tooltip>
+  
+  <int-tooltip selector="[data-custom-tooltip-with-html]">
+    <div class="customTooltip">
+      <div id="updater"></div>
+      <strong>Styles and HTML</strong> is possible
+    </div>
+    ...dangling text
+    <div id="content"></div>
+  </int-tooltip>
+
+
+  <h1>Text content from target attribute</h1>
+  <div class="targets">
+    <div data-int-tooltip data-tooltip-content="Content 1"></div>
+    <div data-int-tooltip data-tooltip-content="Content 2"></div>
+    <div data-int-tooltip data-tooltip-content="Content 8">
+      <div style="width: 75px; height: 50px; background-color: salmon;">Dead zone</div>
+    </div>
+  </div>
+
+  <h1>HTML content from individual tooltips</h1>
+  <div class="targets">
+    <div data-custom-tooltip-with-html="thing 1"></div>
+    <div data-custom-tooltip-with-html="thing 2"></div>
+    <div data-custom-tooltip-with-html="thing 3">
+      <div style="width: 75px; height: 50px; background-color: salmon;">Dead zone</div>
+    </div>
+  </div>
+
+  <h1>Text content individual tooltips locked position</h1>
+  <div class="targets">
+    <div data-int-tooltip-fixed="fixed 1"></div>
+    <div data-int-tooltip-fixed="Much longer item for fixed number 2"></div>
+    <div data-int-tooltip-fixed="Normal phrase goes here">
+      <div style="width: 75px; height: 50px; background-color: salmon;">Dead zone</div>
+    </div>
+  </div>
+
+</body>
+
+</html>
