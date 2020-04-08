@@ -4,7 +4,8 @@
 ## Get Started
 
 1. ``yarn``
-2. ``yarn run build``
+2. ``yarn run bootstrap``
+3. ``yarn run build``
 
 ## Run a component dev server
 
