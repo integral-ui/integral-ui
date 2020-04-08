@@ -7,20 +7,21 @@
 
 ## Properties
 
-| Property   | Attribute  | Description | Type     | Default                |
-| ---------- | ---------- | ----------- | -------- | ---------------------- |
-| `content`  | `content`  |             | `string` | `undefined`            |
-| `offsetX`  | `offset-x` |             | `number` | `12`                   |
-| `offsetY`  | `offset-y` |             | `number` | `12`                   |
-| `selector` | `selector` |             | `string` | `'[data-int-tooltip]'` |
+| Property   | Attribute  | Description | Type                                     | Default                |
+| ---------- | ---------- | ----------- | ---------------------------------------- | ---------------------- |
+| `arrow`    | `arrow`    |             | `boolean`                                | `undefined`            |
+| `edge`     | `edge`     |             | `"bottom" \| "left" \| "right" \| "top"` | `undefined`            |
+| `offsetX`  | `offset-x` |             | `number`                                 | `12`                   |
+| `offsetY`  | `offset-y` |             | `number`                                 | `12`                   |
+| `selector` | `selector` |             | `string`                                 | `'[data-int-tooltip]'` |
 
 
 ## Events
 
-| Event         | Description | Type               |
-| ------------- | ----------- | ------------------ |
-| `hideTooltip` |             | `CustomEvent<any>` |
-| `showTooltip` |             | `CustomEvent<any>` |
+| Event                 | Description | Type               |
+| --------------------- | ----------- | ------------------ |
+| `integralHideTooltip` |             | `CustomEvent<any>` |
+| `integralShowTooltip` |             | `CustomEvent<any>` |
 
 
 ## Dependencies
