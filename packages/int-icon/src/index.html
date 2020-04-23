@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>Stencil Component Starter</title>
+
+  <script type="module" src="/build/int-icon.esm.js"></script>
+  <script nomodule src="/build/int-icon.js"></script>
+  <style>
+    body > int-icon {
+      --icon-color: #4ddc65;
+      padding: 26px;
+    }
+    body > int-icon:hover {
+      --icon-color: rgb(200, 0, 120);
+      width: 75px;
+      height: 75px;
+      padding: 0;
+    }
+    body > int-icon:last-of-type {
+      --icon-color: grey;
+    }
+    .scales int-icon:nth-child(1) { --s: 12px; width: var(--s); height: var(--s); }
+    .scales int-icon:nth-child(2) { --s: 18px; width: var(--s); height: var(--s); }
+    .scales int-icon:nth-child(3) { --s: 24px; width: var(--s); height: var(--s); }
+    .scales int-icon:nth-child(4) { --s: 36px; width: var(--s); height: var(--s); }
+    .scales int-icon:nth-child(5) { --s: 64px; width: var(--s); height: var(--s); }
+    .scales int-icon:nth-child(6) { --s: 96px; width: var(--s); height: var(--s); }
+  </style>
+
+</head>
+<body>
+  <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/communication/svg/production/ic_swap_calls_48px.svg"></int-icon>
+  <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/communication/svg/production/ic_swap_calls_48px.svg"></int-icon>
+  <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/communication/svg/production/ic_swap_calls_48px.svg"></int-icon>
+  <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/communication/svg/production/ic_call_merge_48px.svg"></int-icon>
+  <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/communication/svg/production/ic_swap_calls_48px.svg"></int-icon>
+  <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/communication/svg/production/ic_call_merge_48px.svg"></int-icon>
+  <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/communication/svg/production/ic_call_merge_48px.svg"></int-icon>
+  <div class="scales">
+    <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/notification/svg/production/ic_bluetooth_audio_48px.svg"></int-icon>
+    <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/notification/svg/production/ic_bluetooth_audio_48px.svg"></int-icon>
+    <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/notification/svg/production/ic_bluetooth_audio_48px.svg"></int-icon>
+    <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/notification/svg/production/ic_bluetooth_audio_48px.svg"></int-icon>
+    <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/notification/svg/production/ic_bluetooth_audio_48px.svg"></int-icon>
+    <int-icon url="https://raw.githubusercontent.com/google/material-design-icons/master/notification/svg/production/ic_bluetooth_audio_48px.svg"></int-icon>
+  </div>
+</body>
+</html>
