@@ -25,9 +25,12 @@ export class IntIcon implements ComponentInterface {
   }
 
   @Element() host: Element;
+
   @State() _style = {};
-  @Prop() color: string = 'black';
-  @Prop() size: number = 24;
+
+  /**
+   * URL to load SVG file into icon
+   */
   @Prop() url: string;
 
   componentDidLoad() {
