@@ -7,20 +7,20 @@
 
 ## Properties
 
-| Property        | Attribute       | Description         | Type      | Default     |
-| --------------- | --------------- | ------------------- | --------- | ----------- |
-| `checked`       | `checked`       |                     | `boolean` | `false`     |
-| `disabled`      | `disabled`      |                     | `boolean` | `false`     |
-| `indeterminate` | `indeterminate` |                     | `boolean` | `false`     |
-| `name`          | `name`          | Public Property API | `string`  | `undefined` |
-| `value`         | `value`         |                     | `boolean` | `undefined` |
+| Property        | Attribute       | Description | Type      | Default     |
+| --------------- | --------------- | ----------- | --------- | ----------- |
+| `checked`       | `checked`       |             | `boolean` | `false`     |
+| `disabled`      | `disabled`      |             | `boolean` | `false`     |
+| `indeterminate` | `indeterminate` |             | `boolean` | `false`     |
+| `name`          | `name`          |             | `string`  | `undefined` |
+| `value`         | `value`         |             | `boolean` | `undefined` |
 
 
 ## Events
 
-| Event     | Description    | Type               |
-| --------- | -------------- | ------------------ |
-| `changed` | Events section | `CustomEvent<any>` |
+| Event     | Description | Type               |
+| --------- | ----------- | ------------------ |
+| `changed` |             | `CustomEvent<any>` |
 
 
 ----------------------------------------------
