@@ -1,3 +1,69 @@
 :host {
+  --checkbox-cursor: pointer;
+  --checkbox-size: calc(1em - 3px);
+  --checkbox-border-width: 2px;
+  --checkbox-border-radius: 0px;
+  --checkbox-icon-color: black;
+  --checkbox-background-color: white;
+  --checkbox-border-color: black;
+  --checkbox-disabled-icon-color: rgb(154, 154, 154);
+  --checkbox-disabled-background-color: rgb(204, 204, 204);
+  --checkbox-disabled-border-color: var(--checkbox-disabled-icon-color);
+  --checkbox-disabled-text-color: var(--checkbox-disabled-icon-color);
+}
+label {
+  cursor: var(--checkbox-cursor);
+}
+
+.inputWrapper {
+  display: inline-block;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  overflow: hidden;
+  position: relative;
+  margin-right: 3px;
+}
+.inputWrapper input {
+  position: absolute;
+  left: 50px;
+  display: none;
+}
+.box {
+  border: var(--checkbox-border-width) solid var(--checkbox-border-color);
+  border-radius: var(--checkbox-border-radius);
+  background-color: var(--checkbox-background-color);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+.box > * {
+  display: none;
+  fill: var(--checkbox-icon-color);
+} 
+.box .check {
+  transform: scale(.80);
+}
+input:indeterminate ~ .box .check {
+  display: none;
+}
+input:indeterminate ~ .box .line {
   display: block;
+}
+input:checked ~ .box .check {
+  display: block;
+}
+input:checked ~ .box .line {
+  display: none;
+}
+input:disabled ~ .box {
+  background-color: var(--checkbox-disabled-background-color);
+  border-color: var(--checkbox-disabled-border-color);
+}
+input:disabled ~ .box svg {
+  fill: var(--checkbox-disabled-icon-color);
+  filter: drop-shadow( 0px 1px 0px rgba(255, 255, 255, .7));
+}
+
+span.disabled {
+  color: var(--checkbox-disabled-text-color);
 }
