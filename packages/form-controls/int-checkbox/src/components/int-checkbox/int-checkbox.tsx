@@ -7,7 +7,8 @@ import {
   Prop,
   EventEmitter,
   Event,
-  Watch
+  Watch,
+  State
 } from '@stencil/core';
 
 @Component({
@@ -16,34 +17,19 @@ import {
   shadow: true
 })
 export class IntCheckbox {
-  /**
-   * Own Properties
-   */
 
-  /**
-   * Reference to host HTML element.
-   */
-  @Element() el: HTMLElement;
-  checkbox: HTMLInputElement;
+  @Element() host: Element;
 
-  /**
-   * State() variables
-   */
+  @State() _checked: boolean;
+  @State() _indeterminate: boolean;
+  @State() _disabled: boolean;
 
-  /**
-   * Public Property API
-   */
-  // START
-  @Prop({ mutable: true, reflect: true }) name: string;
+  @Prop() name: string;
+  @Prop() disabled: boolean = false;
   @Prop({ mutable: true, reflect: true }) value: boolean;
   @Prop({ mutable: true, reflect: true }) checked: boolean = false;
   @Prop({ mutable: true, reflect: true }) indeterminate: boolean = false;
-  @Prop({ mutable: true, reflect: true }) disabled: boolean = false;
-  // END
 
-  /**
-   * Events section
-   */
   @Event({
     eventName: 'changed',
     composed: true,
@@ -51,77 +37,80 @@ export class IntCheckbox {
     bubbles: true,
   }) changed: EventEmitter;
 
-  /**
-   * Component lifecycle events
-   */
-  // componentWillLoad() {}
-  componentDidLoad() {
-    this.checkbox.indeterminate = this.indeterminate;
-    if (this.indeterminate) {
-      this.checkbox.checked = false;
-      this.checked = false;
-
-    } else {
-      this.checkbox.checked = this.checked;      
-    }
-    this.checkbox.disabled = this.disabled;
+  componentWillLoad() {
+    this.updateState(this.checked, this.indeterminate, this.disabled);
   }
-  // componentWillUpdate() {}
-  // componentDidUpdate() {}
-  // componentDidUnload() {}
 
-  /**
-   * Listeners
-   */
+  componentDidLoad() {
+    this.updateInput(this._checked, this._indeterminate, this._disabled);
+  }
+
   @Watch('checked')
-  watchChecked(newVal:  boolean, _: boolean) {
-    this.checkbox.checked = newVal;
-    if (!this.indeterminate) {
-      this.changed.emit();
-    }
-
-    this.value = this.checkbox.checked;
+  watchChecked(newVal:  boolean) {
+    this.updateState(newVal, this._indeterminate, this._disabled);
+    this.changed.emit();
   }
 
   @Watch('indeterminate')
-  watchIndeterminate(newVal:  boolean, _: boolean) {
-    this.checkbox.indeterminate = newVal;
-    this.checkbox.checked = false;
-    this.checked = false;
-    if (!(this.checked  && !this.indeterminate)) {
-      this.changed.emit();
-    }
+  watchIndeterminate(newVal: boolean) {
+    this.updateState(this._checked, newVal, this._disabled);
   }
 
   @Watch('disabled')
   watchDisabled(newVal: boolean) {
-    this.checkbox.disabled = newVal;
+    this.updateState(this._checked, this._indeterminate, newVal);
+  }
+
+  @Listen('keypress')
+  onKeypress(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      this.updateState(!this._checked, this._indeterminate, this._disabled);
+    }
   }
 
   @Listen('click')
-  onClick() {
-    this.checked = this.indeterminate ? false : this.checkbox.checked;
-    this.indeterminate = this.checkbox.indeterminate;
-    this.disabled = this.checkbox.disabled;
+  onClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (this.disabled) {
+      return;
+    }
+    this.updateState(!this._checked, this._indeterminate, this._disabled);
+  }
+
+  updateInput(checked, indeterminate, disabled) {
+    const input = this.host.shadowRoot.querySelector('input');
+    if (input) {
+      input.checked = checked;
+      input.indeterminate = indeterminate;
+      input.disabled = disabled;
+    }
+  }
+
+  updateState(checked, indeterminate, disabled) {
+    if (checked !== this.checked) {
+      indeterminate = false;
+    }
+    this._checked = this.checked = checked;
+    this._indeterminate = this.indeterminate = indeterminate;
+    this._disabled = this.disabled = disabled;
+    this.updateInput(this._checked, this._indeterminate, this._disabled);
   }
    
-  /**
-   * Public methods API
-   */
-
-  /**
-   * Local methods
-   */
-
-  /**
-   * render() function
-   */
   render() {
     return (
-      <Host>
+      <Host tabindex="0">
         <label>
-          <input ref={(el) => { this.checkbox = el }} type="checkbox"></input>
-          <slot></slot>
+          <div class="inputWrapper">
+            <input type="checkbox" />
+            <div class="box">
+                <svg class="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z"/></svg>
+                <svg class="line" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.4 10.1h13v3h-13z"/></svg>
+            </div>
+          </div>
+          <span class={this.disabled ? "disabled" : ""}>
+            <slot></slot>
+          </span>
         </label>
       </Host>
     );
