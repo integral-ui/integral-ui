@@ -12,11 +12,11 @@
 ``lerna run start --scope @integral-ui/int-<component-name>``
 
 ## Create a component
-
+1. Install the Stencil CLI (`@stencil/core`) globally 
 1. ``cd packages``
 1. ``npm init stencil component int-<component-name>``
-1. ``cd packages/<component-name>``
-1. ``npx stencil generate``
+1. ``cd <component-name>``
+1. ``stencil generate``
 1. Name your component after your project, eg: `<component-name>`
 1. run `yarn run bootstrap`
 1. run `yarn run build`

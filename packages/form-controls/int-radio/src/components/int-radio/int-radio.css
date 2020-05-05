@@ -1,0 +1,58 @@
+:host {
+  --radio-cursor: pointer;
+  --radio-size: calc(1em - 3px);
+  --radio-border-width: 2px;
+  --radio-border-radius: 0px;
+  --radio-icon-color: black;
+  --radio-background-color: white;
+  --radio-border-color: black;
+  --radio-disabled-icon-color: rgb(154, 154, 154);
+  --radio-disabled-background-color: rgb(204, 204, 204);
+  --radio-disabled-border-color: var(--radio-disabled-icon-color);
+  --radio-disabled-text-color: var(--radio-disabled-icon-color);
+}
+label {
+  cursor: var(--radio-cursor);
+}
+
+.inputWrapper {
+  display: inline-block;
+  width: var(--radio-size);
+  height: var(--radio-size);
+  overflow: hidden;
+  position: relative;
+  margin-right: 3px;
+}
+.inputWrapper input {
+  position: absolute;
+  left: 50px;
+  display: none;
+}
+.box {
+  border: var(--radio-border-width) solid var(--radio-border-color);
+  border-radius: var(--radio-border-radius);
+  background-color: var(--radio-background-color);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+.box > * {
+  display: none;
+  fill: var(--radio-icon-color);
+} 
+.box .check {
+  background-color: var(--radio-icon-color);
+  margin: calc(var(--radio-border-width) * 1.5);
+  width: calc(100% - calc(var(--radio-border-width) * 3));
+  height: calc(100% - calc(var(--radio-border-width) * 3));
+}
+input:checked ~ .box .check {
+  display: block;
+}
+input:disabled ~ .box {
+  background-color: var(--radio-disabled-background-color);
+  border-color: var(--radio-disabled-border-color);
+}
+span.disabled {
+  color: var(--radio-disabled-text-color);
+}

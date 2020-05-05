@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+  <title>Stencil Component Starter</title>
+
+  <script type="module" src="/build/int-radio.esm.js"></script>
+  <script nomodule src="/build/int-radio.js"></script>
+
+</head>
+<style>
+  .smallScale {
+    font: normal 12px/1.2 Arial;
+  }
+  .smallScale int-radio {
+    --radio-border-width: 1px;
+  }
+  .normalScale {
+    font: normal 16px/1.3 Arial;
+  }
+  .largeScale {
+    font: normal 22px/1.5 Arial;
+    background-color: bisque;
+    color: rgb(238, 138, 138);
+    padding: 10px;
+  }
+  .largeScale int-radio {
+    --radio-size: 17px;
+    --radio-border-radius: 4px;
+    --radio-background-color: white;
+    --radio-border-color: rgb(3, 101, 192);
+    --radio-icon-color: rgb(255, 255, 255);
+  }
+  .largeScale int-radio[checked],
+  .largeScale int-radio[indeterminate] {
+    --radio-background-color: rgb(3, 101, 192);
+  }
+  form int-radio {
+  }
+</style>
+
+<body>
+  <!-- START int-radio -->
+  <div class="smallScale">
+    <int-radio>George</int-radio>
+    <int-radio checked>Hello</int-radio>
+    <int-radio checked indeterminate>Hello</int-radio>
+    <int-radio disabled checked>Hello</int-radio>
+    <int-radio disabled>Hello</int-radio>
+    <int-radio disabled indeterminate>Hello</int-radio>
+  </div>
+  <br />
+  <div class="normalScale">
+    <int-radio>George</int-radio>
+    <int-radio id="checkbox-test" checked>Hello</int-radio>
+    <int-radio checked indeterminate>Hello</int-radio>
+    <int-radio disabled checked>Hello</int-radio>
+    <int-radio disabled>Hello</int-radio>
+    <int-radio disabled indeterminate>Hello  <a href="https://www.google.com">link</a></int-radio>
+  </div>
+  <br />
+  <div class="largeScale">
+    <int-radio>George</int-radio>
+    <int-radio checked>Hello</int-radio>
+    <int-radio checked indeterminate>Hello</int-radio>
+    <int-radio disabled checked>Hello</int-radio>
+    <int-radio disabled>Hello</int-radio>
+    <int-radio disabled indeterminate>Hello</int-radio>
+  </div>
+
+<script>
+    (function() {
+      let checkbox = document.getElementById('checkbox-test');
+      checkbox.addEventListener('changed', (e) => {
+        console.log('-- index');
+        console.log('checked', e.target.checked);
+        console.log('indeterminate', e.target.indeterminate);
+        console.log('disabled', e.target.disabled);
+      });
+    })();
+  </script>
+  <!-- END int-radio -->
+</body>
+
+</html>
