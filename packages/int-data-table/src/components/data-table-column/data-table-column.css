@@ -6,3 +6,22 @@
   align-items: center;
 }
 
+.sort_indicator {
+  width: 10px;
+  height: 18px;
+  margin-right: 3px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+.sort_indicator svg {
+  width: 24px;
+  position: absolute;
+  left: -7px;
+}
+.sort_indicator .up {
+  top: -7px;
+}
+.sort_indicator .down {
+
+}

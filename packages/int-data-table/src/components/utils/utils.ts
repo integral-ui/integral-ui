@@ -11,6 +11,33 @@ export const setGlobalReference = function(key: string, value) {
 export const getGlobalReference = function(key): any {
     return window[GLOBAL_NAMESPACE][key];
 }
+// INTERFACES
+export interface Sort {
+    key: string,
+    direction?: 'ASC'|'DESC'
+};
+  
+export interface Group {
+    key: string,
+    label: string
+};
+
+export interface Filter {
+    key: string,
+    label: string
+};
+export interface Pagination {
+    page: number,
+    length: number
+};
+
+export interface Config {
+    sort?: Sort[];
+    search?: string,
+    group?: Group[],
+    filter?: Filter[],
+    paginate?: Pagination
+}
 
 const normalizePath = (path) => {
     if (Array.isArray(path)) {
@@ -55,13 +82,14 @@ const sortGenerator = (...columns) => {
     return (a, b) => innerFunction(a, b, walkObject)
 }
 
-const putRowInGroup = (grouping, row, levels: {key: string, label: string}[]) => {
+const putRowInGroup = (grouping, row, levels: Group[]) => {
     const currentLevel = levels.shift();
     const currentLevelKey = currentLevel.key;
     const currentLevelValue = walkObject(row, currentLevelKey);
     grouping[currentLevelValue] = grouping[currentLevelValue] || Object.create(null);
     grouping[currentLevelValue].__groupKey = currentLevelKey;
-    grouping[currentLevelValue].__groupLabel = `${currentLevel.label}: ${currentLevelValue}`;
+    grouping[currentLevelValue].__groupValue = currentLevelValue;
+    grouping[currentLevelValue].__groupLabel = currentLevel.label;
 
     if (levels.length) {
         putRowInGroup(grouping[currentLevelValue], row, levels)
@@ -71,7 +99,7 @@ const putRowInGroup = (grouping, row, levels: {key: string, label: string}[]) =>
     }
 }
 
-export const groupBy = (data, groups: {key: string, label: string}[]) => {
+export const groupBy = (data, groups: Group[]) => {
     const groupings = Object.create(null)
     data.forEach((row) => {
         putRowInGroup(groupings, row, groups.slice())
@@ -79,7 +107,7 @@ export const groupBy = (data, groups: {key: string, label: string}[]) => {
     return groupings;
 }
 
-export const sortBy = (data, columns: {key: string, direction: string}[]) => {
+export const sortBy = (data, columns: Sort[]) => {
     const sortFn = sortGenerator.apply(null, columns);
     data.sort(sortFn);
     return data;

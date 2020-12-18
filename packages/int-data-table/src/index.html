@@ -14,7 +14,7 @@
         return row.faults.map(f => `<span class="fault" style="display:inline-block; margin-right: 3px; padding: 3px 5px; background: orange; border-radius: 3px;">${f}</span>`).join('')
       }
       const fetchData = async () => {
-        const response = await fetch("https://hjyeu2iqr7.execute-api.us-east-2.amazonaws.com/?limit=250");
+        const response = await fetch("https://hjyeu2iqr7.execute-api.us-east-2.amazonaws.com/?limit=10000");
         const json = await response.json();
         return json.body;
       }
@@ -32,7 +32,7 @@
       <int-data-table-column primary-key="name.first">First Name</int-data-table-column>
       <int-data-table-column primary-key="registered" renderer="renderRegisterDate">Registered</int-data-table-column>
       <int-data-table-column primary-key="age" width="65px" renderer="(row) => row.age">Age</int-data-table-column>
-      <int-data-table-column primary-key="row.faults" renderer="renderFaults">Faults</int-data-table-column>
+      <int-data-table-column primary-key="faults" renderer="renderFaults">Faults</int-data-table-column>
     </int-data-table>
     <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p>
   </body>
@@ -41,10 +41,27 @@
     const table = document.querySelector("int-data-table");
     table.addEventListener('intDataTableReady', async () => {
       data = await fetchData();
+      table.config = {
+        paginate: {
+          page: 1,
+          length: 100
+        },
+        sort: [
+          {key: 'name.first', direction: 'ASC'}
+        ],
+        group: [
+          {key: 'name.salutation', label: 'Title'},
+          {key: 'faults.0', label: 'Fault'},
+          {key: 'isActive', label: 'Active Status'}
+        ]
+      };
       table.data = data;
       // window.setInterval(() => {
       //   table.data = data.slice(Math.floor(Math.random() * 25))
       // }, 30);
+      // window.setTimeout(() => {
+      //   table.config = {}
+      // }, 1500)
     });
   </script>
 </html>

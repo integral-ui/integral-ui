@@ -1,4 +1,5 @@
-import { Component, Host, h, Element, Prop, Method } from '@stencil/core';
+import { Component, Host, h, Element, Prop, Method, Event, EventEmitter, Listen } from '@stencil/core';
+import { Sort, Group } from '../utils/utils';
 
 @Component({
   tag: 'int-data-table-column',
@@ -14,12 +15,19 @@ export class DataTableColumn {
   @Prop() width: string = 'minmax(0, 1fr)';
   @Prop() renderer: string = `(row, index, column, walker) => walker(row, column.primaryKey)`;
   @Prop() trim: boolean = true;
+  @Event() doSort: EventEmitter<Partial<Sort>>;
 
   @Method()
   async getConfig() {
     return this;
   }
 
+  doSortHandler(event: MouseEvent) {
+    this.doSort.emit({
+      key: this.sortKey || this.primaryKey
+    })
+  }
+  
   componentWillLoad() {
     if (!this.primaryKey) {
       throw `Integral UI DataTable column primaryKey is missing`
@@ -29,7 +37,10 @@ export class DataTableColumn {
   render() {
     return (
       <Host>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"> <path d="M18.36,9.29c.39.39.26.71-.29.71H5.93c-.55,0-.68-.32-.29-.71l5.65-5.65a1,1,0,0,1,1.42,0Z" /> <path d="M5.64,13.71c-.39-.39-.26-.71.29-.71H18.07c.55,0,.68.32.29.71l-5.65,5.65a1,1,0,0,1-1.42,0Z" /></svg>
+        <div class="_sort sort_indicator" onClick={e => this.doSortHandler(e)}>
+          <svg class="up" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M8.71 12.29L11.3 9.7c.39-.39 1.02-.39 1.41 0l2.59 2.59c.63.63.18 1.71-.71 1.71H9.41c-.89 0-1.33-1.08-.7-1.71z"/></svg>
+          <svg class="down" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M8.71 11.71l2.59 2.59c.39.39 1.02.39 1.41 0l2.59-2.59c.63-.63.18-1.71-.71-1.71H9.41c-.89 0-1.33 1.08-.7 1.71z"/></svg>
+        </div>
         <div>
           <slot></slot>
         </div>
