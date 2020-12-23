@@ -12,31 +12,46 @@ export const getGlobalReference = function(key): any {
     return window[GLOBAL_NAMESPACE][key];
 }
 // INTERFACES
-export interface Sort {
-    key: string,
-    direction?: 'ASC'|'DESC'
+export type Sort = {
+    key: string;
+    direction?: 'ASC'|'DESC';
 };
   
-export interface Group {
-    key: string,
-    label: string
+export type Group = {
+    key: string;
+    label: string;
 };
 
-export interface Filter {
-    key: string,
-    label: string
-};
-export interface Pagination {
-    page: number,
-    length: number
+export type Filter = {
+    key: string;
+    label: string;
 };
 
+export type Pagination = { page: number, length?: number } |
+                         { page?: number, length: number };
 export interface Config {
+    columns?: [];
     sort?: Sort[];
-    search?: string,
-    group?: Group[],
-    filter?: Filter[],
-    paginate?: Pagination
+    search?: string;
+    group?: Group[];
+    filter?: Filter[];
+    paginate?: Pagination;
+}
+export class DataTableConfig {
+    constructor (config?: Config) {
+        const defaults: Config = {
+            columns: [],
+            sort: [],
+            search: '',
+            group: [],
+            filter: [],
+            paginate: {
+                page: 1,
+                length: 25
+            }
+        };
+        Object.assign(this, defaults, config)
+    }
 }
 
 const normalizePath = (path) => {

@@ -26,8 +26,8 @@
     </style>
   </head>
   <body>
-    <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p>
-    <int-data-table class="table1">
+    <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p>
+    <int-data-table class="table1" row-height="28">
       <int-data-table-column primary-key="id" width="75px" renderer="(row, index) => index">Index</int-data-table-column>
       <int-data-table-column primary-key="name.first">First Name</int-data-table-column>
       <int-data-table-column primary-key="registered" renderer="renderRegisterDate">Registered</int-data-table-column>
@@ -44,15 +44,10 @@
       table.config = {
         paginate: {
           page: 1,
-          length: 100
+          length: 10000
         },
         sort: [
           {key: 'name.first', direction: 'ASC'}
-        ],
-        group: [
-          {key: 'name.salutation', label: 'Title'},
-          {key: 'faults.0', label: 'Fault'},
-          {key: 'isActive', label: 'Active Status'}
         ]
       };
       table.data = data;
