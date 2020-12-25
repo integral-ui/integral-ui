@@ -17,9 +17,6 @@
 :host([loading]) .body {
   min-height: 100px;
   background-color: transparent;
-  contain: style layout paint;
-  contain-instrinsic-size: 500px;
-  content-visibility: auto;
 }
 :host([loading])::after {
   content: '';
@@ -30,13 +27,17 @@
   height: 100%;
   background: var(--int-loading-overlay);
 }
+[data-paint-container] {
+  /* contain: style layout paint size;
+  contain-instrinsic-size: 1vh;
+  content-visibility: auto; */
+}
 .border {
   border: var(--int-border-width) solid var(--int-border-color);
 }
 .head {
-  position: sticky;
-  top: 0px;
   border-bottom: var(--int-border-width) solid var(--int-border-color);
+  /* margin-bottom: -1px; */
 }
 .body {
   overflow: auto;

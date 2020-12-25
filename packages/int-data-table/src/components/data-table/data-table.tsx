@@ -22,7 +22,7 @@ export class DataTable {
   private columnLayout = '';
   private bodyEl: HTMLDivElement;
   private rowCache = [];
-  private virtualizedRowTracker: [start:number, end:number] = [0,0];
+  private visibleRows: [start:number, end:number] = [0,0];
   
   @Element() host: Element;
 
@@ -70,7 +70,7 @@ export class DataTable {
     const startIndex = viewport.scrollTop/this.rowHeight;
     const visibleRows = viewport.clientHeight/this.rowHeight;
     const endIndex = startIndex + visibleRows;
-    this.virtualizedRowTracker = [Math.floor(startIndex), Math.ceil(endIndex)]
+    this.visibleRows = [Math.floor(startIndex), Math.ceil(endIndex)]
   }
   
   removeGroupEvent(event: MouseEvent) {
@@ -87,7 +87,7 @@ export class DataTable {
 
   updateConfig(change: Config) {
     this._config = new DataTableConfig(Object.assign({}, this._config, change));
-    this.config = this._config;
+    this.updateRows()
   }
 
   getConfig() {
@@ -102,7 +102,7 @@ export class DataTable {
   }
 
   componentDidLoad() {
-    this.bodyEl = this.host.shadowRoot.querySelector('._body');
+    this.bodyEl = this.host.shadowRoot.querySelector('[data-render-output]');
     this.constructColumnLayouts();
     this.updateVirtualRows()
   }
@@ -189,19 +189,27 @@ export class DataTable {
   }
 
   renderVirtualRows() {
-    const padding = 50;
-    const [vStart, vEnd] = this.virtualizedRowTracker;
-    const startIndex = (vStart - padding > 0) ? vStart - padding : 0;
-    const endIndex = (vEnd + padding < this.rowCache.length) ? vEnd + padding : vEnd;
+    const height = this.rowHeight;
+    const rows = this.rowCache;
+    const cols = this.columns;
+    const colCount = cols.length;
+    const rowCount = rows.length;
 
-    const preViewSpacer = `<div style="grid-column:span ${this.columns.length};height:${startIndex * this.rowHeight}px;"></div>`;
-    const postViewSpacer = `<div style="grid-column:span ${this.columns.length};height:${(this.rowCache.length - endIndex) * this.rowHeight}px;"></div>`;
-    this.renderedContent = [preViewSpacer, ...this.rowCache.slice(startIndex, endIndex).map(this.rowRenderer), postViewSpacer].join('');
+    const padding = 50;
+    const [vStart, vEnd] = this.visibleRows;
+    const startIndex = (vStart - padding > 0) ? vStart - padding : 0;
+    const endIndex = (vEnd + padding < rowCount) ? vEnd + padding : vEnd;
+
+    const preViewSpacer = (startIndex === 0) ? '' : `<div style="visibility:hidden;grid-column:span ${colCount};height:${startIndex * height}px;"></div>`;
+    const postViewSpacer = (endIndex +1 === rowCount) ? '' : `<div style="visibility:hidden;grid-column:span ${colCount};height:${(rowCount - endIndex) * height}px;"></div>`;
+    this.renderedContent = [preViewSpacer, ...rows.slice(startIndex, endIndex).map(this.rowRenderer), postViewSpacer].join('');
+    // this.renderedContent = rows.slice(startIndex, endIndex).map(this.rowRenderer).join('');
+
   }
 
   render() {
     let bodyStyle = {};
-    let bodyClass = '_body body';
+    let bodyClass = { 'body': true, 'grid': false };
     let groups;
 
     if (this.dragColumnToGroup) {
@@ -215,20 +223,20 @@ export class DataTable {
         )}
       </ol>;
     }
+
     if (this._config.group.length === 0) {
       bodyStyle = { 'grid-template-columns' : this.columnLayout };
-      bodyClass += ' grid';
+      bodyClass.grid = true
     }
     
     return ( 
       <Host>
-        {this.virtualizedRowTracker}
         <div class="border">
           {groups}
           <div class="head grid" style={{ 'grid-template-columns' : this.columnLayout, 'padding-left': `${this._config.group ? this._config.group.length * 20 : 0}px`}}>
             <slot></slot>
           </div>
-          <div onScroll={() => this.viewportWatcher()} class={bodyClass} style={bodyStyle} innerHTML={this.renderedContent}></div>
+          <div data-render-output data-paint-container onScroll={() => this.viewportWatcher()} class={bodyClass} style={bodyStyle} innerHTML={this.renderedContent}></div>
         </div>
       </Host>
     );

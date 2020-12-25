@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Stencil Component Starter</title>
+    <title>**** INTEGRAL UI TEST ***</title>
     <script type="module" src="/build/int-data-table.esm.js"></script>
     <script nomodule src="/build/int-data-table.js"></script>
     <script>
@@ -14,7 +14,7 @@
         return row.faults.map(f => `<span class="fault" style="display:inline-block; margin-right: 3px; padding: 3px 5px; background: orange; border-radius: 3px;">${f}</span>`).join('')
       }
       const fetchData = async () => {
-        const response = await fetch("https://hjyeu2iqr7.execute-api.us-east-2.amazonaws.com/?limit=10000");
+        const response = await fetch("https://hjyeu2iqr7.execute-api.us-east-2.amazonaws.com/?limit=100");
         const json = await response.json();
         return json.body;
       }
@@ -26,7 +26,6 @@
     </style>
   </head>
   <body>
-    <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p>
     <int-data-table class="table1" row-height="28">
       <int-data-table-column primary-key="id" width="75px" renderer="(row, index) => index">Index</int-data-table-column>
       <int-data-table-column primary-key="name.first">First Name</int-data-table-column>
@@ -34,7 +33,6 @@
       <int-data-table-column primary-key="age" width="65px" renderer="(row) => row.age">Age</int-data-table-column>
       <int-data-table-column primary-key="faults" renderer="renderFaults">Faults</int-data-table-column>
     </int-data-table>
-    <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p> <p> Surrounding content test </p>
   </body>
   <script>
     let data;
