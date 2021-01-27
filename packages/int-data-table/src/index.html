@@ -7,14 +7,14 @@
     <script type="module" src="/build/int-data-table.esm.js"></script>
     <script nomodule src="/build/int-data-table.js"></script>
     <script>
-      const renderRegisterDate = (row) => {
+      const renderRegisterDate = (row, index, cols, walker) => {
         return new Date(row.registered).toDateString()
       }
       const renderFaults = (row) => {
         return row.faults.map(f => `<span class="fault" style="display:inline-block; margin-right: 3px; padding: 3px 5px; background: orange; border-radius: 3px;">${f}</span>`).join('')
       }
       const fetchData = async () => {
-        const response = await fetch("https://hjyeu2iqr7.execute-api.us-east-2.amazonaws.com/?limit=100");
+        const response = await fetch("https://hjyeu2iqr7.execute-api.us-east-2.amazonaws.com/?limit=5000");
         const json = await response.json();
         return json.body;
       }
@@ -26,7 +26,7 @@
     </style>
   </head>
   <body>
-    <int-data-table class="table1" row-height="28">
+    <int-data-table class="table1" row-height="50">
       <int-data-table-column primary-key="id" width="75px" renderer="(row, index) => index">Index</int-data-table-column>
       <int-data-table-column primary-key="name.first">First Name</int-data-table-column>
       <int-data-table-column primary-key="registered" renderer="renderRegisterDate">Registered</int-data-table-column>
