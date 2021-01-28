@@ -1,5 +1,5 @@
-import { Component, Host, h, Element, Prop, Method, Event, EventEmitter, Listen } from '@stencil/core';
-import { Sort, Group } from '../utils/utils';
+import { Component, Host, h, Element, Prop, Method, Event, EventEmitter } from '@stencil/core';
+import { Sort } from '../utils/utils';
 
 @Component({
   tag: 'int-data-table-column',
@@ -23,11 +23,12 @@ export class DataTableColumn {
   }
 
   doSortHandler(event: MouseEvent) {
+    console.log(event)
     this.doSort.emit({
       key: this.sortKey || this.primaryKey
     })
   }
-  
+
   componentWillLoad() {
     if (!this.primaryKey) {
       throw `Integral UI DataTable column primaryKey is missing`

@@ -1,5 +1,5 @@
 import { Component, Host, h, Prop, State, Element, EventEmitter, Event, Watch, Listen } from '@stencil/core';
-import { walkObject, groupBy, paginate, search, sortBy, Sort, Config, Group, DataTableConfig } from '../utils/utils';
+import { walkObject, groupBy, paginate, search, sortBy, Config, Group, DataTableConfig } from '../utils/utils';
 
 class DataGridRow {
   index = 0;
@@ -26,13 +26,13 @@ export class DataTable {
   private visibleRowBounds: [start:number, end:number] = [0,0];
   private visibleRowBuffer = 50;
   private rowBorderSize = 1;
-  private colBorderSize = 1;
-  
+  // private colBorderSize = 1;
+
   @Element() host: Element;
 
   @State() columns: any[] = [];
   @State() renderedContent;
-  
+
   @Prop() data: any[] = [];
   @Prop() rowHeight: number;
   @Prop() processData: boolean = true;
@@ -90,7 +90,7 @@ export class DataTable {
     const height = this.rowHeight + this.rowBorderSize;
     const rows = this.rowCache;
     const rowCount = rows.length;
-    
+
     const padding = this.visibleRowBuffer;
     const [vStart, vEnd] = this.visibleRowBounds;
     const startIndex = (vStart - padding > 0) ? vStart - padding : 0;
@@ -99,7 +99,7 @@ export class DataTable {
     const postSpacer = (endIndex === rowCount) ? null : <div key="post_spacer" class="full-width virtual-scroll-spacer bottom-spacer" style={{'height': `${(rowCount - endIndex) * height}px`}}></div>;
     this.renderedContent = [preSpacer, ...rows.slice(startIndex, endIndex).map(this.rowRenderer), postSpacer];
   }
-  
+
   removeGroupEvent(event: MouseEvent) {
     event.stopPropagation()
     const el = event.target as HTMLAnchorElement; //https://palantir.github.io/tslint/rules/no-angle-bracket-type-assertion/
@@ -231,13 +231,13 @@ export class DataTable {
   render() {
     let bodyStyle = {};
     let bodyClass = { 'body': true, 'grid': false };
-    const showGroups = this.getConfig().group.length > 0; 
+    const showGroups = this.getConfig().group.length > 0;
     let groups;
 
     if (this.dragColumnToGroup) {
       groups = <ol class="groups">
         Drag columns to group:
-        {this._config.group.map( g => 
+        {this._config.group.map( g =>
           <li key={g.key}>
             <span>{g.label}</span>
             <a onClick={(e) => this.removeGroupEvent(e)} data-key={g.key}></a>
@@ -253,8 +253,8 @@ export class DataTable {
       };
       bodyClass.grid = true
     }
-    
-    return ( 
+
+    return (
       <Host>
         <div class="border">
           {groups}

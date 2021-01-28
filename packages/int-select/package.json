@@ -1,9 +1,9 @@
 {
-  "name": "@integral-ui/int-checkbox",
-  "version": "0.0.1-alpha.1",
+  "name": "@integral-ui/int-select",
+  "version": "0.0.1",
   "description": "Stencil Component Starter",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
   "es2015": "dist/esm/index.mjs",
   "es2017": "dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
@@ -22,12 +22,15 @@
     "generate": "stencil generate"
   },
   "devDependencies": {
-    "@stencil/core": "1.12.5",
+    "@stencil/core": "2.3.0",
     "@types/jest": "^24.0.23",
     "@types/puppeteer": "1.20.2",
     "jest": "24.9.0",
     "jest-cli": "24.9.0",
     "puppeteer": "2.0.0"
+  },
+  "dependencies": {
+    "@integral-ui/int-checkbox": "^0.0.1"
   },
   "license": "MIT"
 }

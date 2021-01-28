@@ -21,8 +21,8 @@
     "test.watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate"
   },
-  "dependencies": {
-    "@stencil/core": "^2.3.0"
+  "devDependencies": {
+    "@stencil/core": "2.3.0"
   },
   "license": "MIT"
 }
