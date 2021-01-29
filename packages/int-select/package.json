@@ -1,5 +1,5 @@
 {
-  "name": "@integral-ui/int-icon",
+  "name": "@integral-ui/int-select",
   "version": "0.0.1",
   "description": "Stencil Component Starter",
   "main": "dist/index.cjs.js",
@@ -9,7 +9,7 @@
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "collection:main": "dist/collection/index.js",
-  "unpkg": "dist/int-icon/int-icon.js",
+  "unpkg": "dist/integralui/integralui.js",
   "files": [
     "dist/",
     "loader/"
@@ -22,7 +22,15 @@
     "generate": "stencil generate"
   },
   "devDependencies": {
-    "@stencil/core": "2.3.0"
+    "@stencil/core": "2.3.0",
+    "@types/jest": "^24.0.23",
+    "@types/puppeteer": "1.20.2",
+    "jest": "24.9.0",
+    "jest-cli": "24.9.0",
+    "puppeteer": "2.0.0"
+  },
+  "dependencies": {
+    "@integral-ui/int-checkbox": "^0.0.1"
   },
   "license": "MIT"
 }

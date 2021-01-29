@@ -21,7 +21,7 @@ export class Overlay {
 	hasHeader = false;
 	anchorElement: Element;
 	arrowEdge: Edge;
-	
+
 	@Element() el: Element;
 	@State() positionX = 0;
 	@State() positionY = 0;
@@ -51,16 +51,16 @@ export class Overlay {
 		this.updateAnchor();
 		this.el.shadowRoot.addEventListener('slotchange', () => {
 			this.updatePositioning();
-		});		
+		});
 		return new Promise((resp) => {
 			resp();
 		}).then(() => {
-			this.bringToFront();			
-			this.setPosition();			
+			this.bringToFront();
+			this.setPosition();
 		})
 	}
 
-	componentDidUnload() {
+	disconnectedCallback() {
 		window.clearTimeout(this.redrawTimer);
 	}
 
@@ -69,7 +69,7 @@ export class Overlay {
 		window.clearTimeout(this.redrawTimer);
 		this.redrawTimer = window.setTimeout(() => this.setPosition(), 0);
 	}
-	
+
 	@Listen('scroll', { target: 'window', passive: true })
 	updateFromScroll() {
 		window.clearTimeout(this.redrawTimer);
@@ -141,7 +141,7 @@ export class Overlay {
 				} else {
 					positionX = anchorRect.left + Number(x);
 				}
-				
+
 			}
 			if (edge === "left" || edge === "right") {
 				if (y === "min") {
@@ -152,9 +152,9 @@ export class Overlay {
 					positionY = (anchorRect.top + (anchorRect.height / 2)) - (contentRect.height / 2);
 				} else {
 					positionY = anchorRect.top + Number(y);
-				}				
+				}
 			}
-			
+
 			// Evaluate opposite edge for better fit
 			if (edge === "top" && positionY < 0 ) {
 				alternateEdge = "bottom";
@@ -167,14 +167,14 @@ export class Overlay {
 
 			} else if (edge === "right" && positionX + contentRect.width > viewport.width) {
 				alternateEdge = "left";
-			}		
+			}
 			if (alternateEdge) {
 				let newPos = this.calculatePosition(alternateEdge, this.x, this.y, offset, contentRect, anchorRect);
 				edge = newPos.edge;
 				positionX = newPos.x;
 				positionY = newPos.y;
 			}
-			
+
 
 		} else {
 
@@ -257,7 +257,7 @@ export class Overlay {
 			}
 		}
 	}
-	
+
 	/**
 	 * Sets this `<int-overlay>` to have the highest z-index relative to other `<int-*>` elements
 	 */
